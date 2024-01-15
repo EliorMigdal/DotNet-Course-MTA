@@ -1,28 +1,29 @@
-﻿using static System.Console;
+﻿using System;
+using static System.Console;
 using static System.Math;
 
 namespace Ex01_05
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static void Main()
         {
-            runProgram();
+            RunProgram();
         }
 
-        public static void runProgram()
+        public static void RunProgram()
         {
-            int input = readInputAndParse();
+            int input = ReadInputAndParse();
 
             Console.WriteLine($"Some statistics regarding the number {input}:");
-            Console.WriteLine($"1. The largest digit in {input} is {extractMaxDigit(input)}");
-            Console.WriteLine($"2. The smallest digit in {input} is {extractMinDigit(input)}");
-            Console.WriteLine($"3. The number of digits in {input} that divide by 4 is {countDividingByFour(input)}");
-            Console.WriteLine($"4. The number of digits in {input} that are bigger than its unity digit, {input % 10}, is {countNumOfGreaterThanUnityDigit(input)}");
-            Console.WriteLine($"5. The average of {input}'s digits is {calculateDigitsAverage(input)}");
+            Console.WriteLine($"1. The largest digit in {input} is {ExtractMaxDigit(input)}");
+            Console.WriteLine($"2. The smallest digit in {input} is {ExtractMinDigit(input)}");
+            Console.WriteLine($"3. The number of digits in {input} that divide by 4 is {CountDividingByFour(input)}");
+            Console.WriteLine($"4. The number of digits in {input} that are bigger than its unity digit, {input % 10}, is {CountNumOfGreaterThanUnityDigit(input)}");
+            Console.WriteLine($"5. The average of {input}'s digits is {CalculateDigitsAverage(input)}");
         }
 
-        public static int readInputAndParse()
+        public static int ReadInputAndParse()
         {
             WriteLine("Hi there! Please enter a 9-digit number:");
             string input = ReadLine();
@@ -30,11 +31,11 @@ namespace Ex01_05
             return int.Parse(input);
         }
 
-        public static int extractMaxDigit(int i_Number)
+        public static int ExtractMaxDigit(int i_Number)
         {
             int maxDigit = int.MinValue;
 
-            while (i_Number > 0) 
+            while (i_Number > 0)
             {
                 maxDigit = Max(maxDigit, i_Number % 10);
                 i_Number /= 10;
@@ -43,7 +44,7 @@ namespace Ex01_05
             return maxDigit;
         }
 
-        public static int extractMinDigit(int i_Number)
+        public static int ExtractMinDigit(int i_Number)
         {
             int minDigit = int.MaxValue;
 
@@ -56,7 +57,7 @@ namespace Ex01_05
             return minDigit;
         }
 
-        public static int countDividingByFour(int i_Number)
+        public static int CountDividingByFour(int i_Number)
         {
             int output = 0;
 
@@ -73,7 +74,7 @@ namespace Ex01_05
             return output;
         }
 
-        public static int countNumOfGreaterThanUnityDigit(int i_Number)
+        public static int CountNumOfGreaterThanUnityDigit(int i_Number)
         {
             int output = 0;
             int unityDigit = i_Number % 10;
@@ -92,12 +93,12 @@ namespace Ex01_05
             return output;
         }
 
-        public static float calculateDigitsAverage(int i_Number)
+        public static float CalculateDigitsAverage(int i_Number)
         {
-            return (float) ((float) sumDigits(i_Number) / (float) countNumOfDigits(i_Number));
+            return (float)((float)SumDigits(i_Number) / (float)CountNumOfDigits(i_Number));
         }
 
-        public static int sumDigits(int i_Number)
+        public static int SumDigits(int i_Number)
         {
             int output = 0;
 
@@ -110,7 +111,7 @@ namespace Ex01_05
             return output;
         }
 
-        public static int countNumOfDigits(int i_Number)
+        public static int CountNumOfDigits(int i_Number)
         {
             int output = 0;
 

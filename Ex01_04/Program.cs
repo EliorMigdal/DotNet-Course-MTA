@@ -6,25 +6,25 @@ namespace Ex01_04
     {
         public static void Main(string[] args)
         {
-            runProgram("abbbbbbbbbbbbba");
+            RunProgram(args[0]);
         }
 
-        public static void runProgram(string i_String)
+        public static void RunProgram(string i_String)
         {
-            WriteLine($"Is {i_String} a palindrome? {(isPalindrome(i_String) ? "Yes!" : "No!" )}");
+            WriteLine($"Is {i_String} a palindrome? {(IsPalindrome(i_String) ? "Yes!" : "No!")}");
 
-            if (isANumber(i_String, out int parsedNumber) == true)
+            if (IsANumber(i_String, out int parsedNumber) == true)
             {
                 WriteLine($"Does {i_String} divide by 5? {(parsedNumber % 5 == 0 ? "Yes!" : "No!")}");
             }
 
             else
             {
-                WriteLine($"Number of lowercase letters in {i_String}: {countLowerCase(i_String)}");
+                WriteLine($"Number of lowercase letters in {i_String}: {CountLowerCase(i_String)}");
             }
         }
 
-        public static bool isPalindrome(string i_String)
+        public static bool IsPalindrome(string i_String)
         {
             if (i_String.Length <= 1)
             {
@@ -34,16 +34,16 @@ namespace Ex01_04
             else
             {
                 return i_String[0] == i_String[i_String.Length - 1]
-                    && isPalindrome(i_String.Substring(1, i_String.Length - 2));
+                    && IsPalindrome(i_String.Substring(1, i_String.Length - 2));
             }
         }
 
-        public static bool isANumber(string i_String, out int o_ParsedNumber)
+        public static bool IsANumber(string i_String, out int o_ParsedNumber)
         {
             return int.TryParse(i_String, out o_ParsedNumber);
         }
 
-        public static int countLowerCase (string i_String)
+        public static int CountLowerCase(string i_String)
         {
             int output = 0;
 
