@@ -5,14 +5,14 @@ namespace Ex01_03
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static void Main()
         {
-            runProgram();
+            RunProgram();
         }
 
-        public static void runProgram()
+        public static void RunProgram()
         {
-            printWelcomeMessage();
+            PrintWelcomeMessage();
             string input = ReadLine();
             bool successfullyParsed = int.TryParse(input, out int height);
 
@@ -29,7 +29,7 @@ namespace Ex01_03
             PrintDiamond(height);
         }
 
-        public static void printWelcomeMessage()
+        public static void PrintWelcomeMessage()
         {
             WriteLine("Hi there, and welcome to our diamond printer!");
             WriteLine("Please insert the height of the diamond you would want us to print: ");

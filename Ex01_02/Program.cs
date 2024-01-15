@@ -4,38 +4,38 @@ namespace Ex01_02
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static void Main()
         {
-            const int HEIGHT = 9;
+            const int height = 9;
 
-            PrintDiamond(HEIGHT);
+            PrintDiamond(height);
         }
 
         public static void PrintDiamond(int i_Height)
         {
-            printTriangle(i_Height, i_Height);
-            printTriangleUpSideDown(i_Height - 2, i_Height);
+            PrintTriangleOfStars(i_Height, i_Height);
+            PrintTriangleUpSideDown(i_Height - 2, i_Height);
         }
 
-        public static void printTriangle(int i_RecursionHeight, int i_OriginalHeight)
+        public static void PrintTriangleOfStars(int i_Height, int i_OriginalHeight)
         {
-            if (i_RecursionHeight >= 1)
+            if (i_Height >= 1)
             {
-                printTriangle(i_RecursionHeight - 2, i_OriginalHeight);
-                printRowOfStars(i_RecursionHeight, i_OriginalHeight);
+                PrintTriangleOfStars(i_Height - 2, i_OriginalHeight);
+                PrintRowOfStars(i_Height, i_OriginalHeight);
             }
         }
 
-        public static void printTriangleUpSideDown(int i_RecursionHeight, int i_OriginalHeight)
+        public static void PrintTriangleUpSideDown(int i_Height, int i_OriginalHeight)
         {
-            if (i_RecursionHeight >= 1)
+            if (i_Height >= 1)
             {
-                printRowOfStars(i_RecursionHeight, i_OriginalHeight);
-                printTriangleUpSideDown(i_RecursionHeight - 2, i_OriginalHeight);
+                PrintRowOfStars(i_Height, i_OriginalHeight);
+                PrintTriangleUpSideDown(i_Height - 2, i_OriginalHeight);
             }
         }
 
-        public static void printRowOfStars(int i_CurrentRowLen, int i_LongestRowLen)
+        public static void PrintRowOfStars(int i_CurrentRowLen, int i_LongestRowLen)
         {
             int spaces = (i_LongestRowLen - i_CurrentRowLen) / 2;
 
