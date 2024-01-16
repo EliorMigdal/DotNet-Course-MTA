@@ -13,21 +13,51 @@ namespace Ex01_01
 
         public static void RunProgram()
         {
+            string firstBinaryInput, secondBinaryInput, thirdBinaryInput;
             int firstDecimal, secondDecimal, thirdDecimal;
 
             WriteLine($"Welcome to our program!\nPlease enter 3 9-digit positive binary numbers.");
+            ReadInput(out firstBinaryInput, out secondBinaryInput, out thirdBinaryInput);
+            firstDecimal = ConvertBinaryToDecimal(firstBinaryInput);
+            secondDecimal = ConvertBinaryToDecimal(secondBinaryInput);
+            thirdDecimal = ConvertBinaryToDecimal(thirdBinaryInput);
+            WriteLine($"You have entered the following numbers: {firstDecimal}, {secondDecimal}, {thirdDecimal}, by that order.");
+            WriteLine("Some statistics about your input:");
+            DisplayBinaryInputStatistics(firstBinaryInput, secondBinaryInput, thirdBinaryInput);
+            DisplayDecimalInputStatistics(firstDecimal, secondDecimal, thirdDecimal);
+        }
+
+        public static void ReadInput(out string o_FirstInput, out string o_SecondInput, out string o_ThirdInput)
+        {
             Write("First number: ");
-            firstDecimal = ReadBinaryInputAndConvertToDecimal(out string firstInput);
+            o_FirstInput = ReadLine();
+
+            while (isInputValid(o_FirstInput) == false)
+            {
+                HandleInvalidInput(ref o_FirstInput);
+            }
 
             Write("Second number: ");
-            secondDecimal = ReadBinaryInputAndConvertToDecimal(out string secondInput);
+            o_SecondInput = ReadLine();
+
+            while (isInputValid(o_SecondInput) == false)
+            {
+                HandleInvalidInput(ref o_SecondInput);
+            }
 
             Write("Third number: ");
-            thirdDecimal = ReadBinaryInputAndConvertToDecimal(out string thirdInput);
+            o_ThirdInput = ReadLine();
 
-            WriteLine("Some statistics about your input:");
-            DisplayBinaryInputStatistics(firstInput, secondInput, thirdInput);
-            DisplayDecimalInputStatistics(firstDecimal, secondDecimal, thirdDecimal);
+            while (isInputValid(o_ThirdInput) == false)
+            {
+                HandleInvalidInput (ref o_ThirdInput);
+            }
+        }
+
+        public static void HandleInvalidInput(ref string io_Input)
+        {
+            Write($"{io_Input} is an invalid input! Please enter a 9-digit positive binary number: ");
+            io_Input = ReadLine();
         }
 
         public static void DisplayBinaryInputStatistics(string i_FirstBinary, string i_SecondBinary, string i_ThirdBinary)
@@ -61,19 +91,6 @@ namespace Ex01_01
             stringBuilder.Append(formattedString);
 
             Write(stringBuilder.ToString());
-        }
-
-        public static int ReadBinaryInputAndConvertToDecimal(out string o_Input)
-        {
-            o_Input = ReadLine();
-
-            while (isInputValid(o_Input) == false)
-            {
-                WriteLine($"{o_Input} is an invalid input! Please enter a 9-digit positive binary number.");
-                o_Input = ReadLine();
-            }
-
-            return ConvertBinaryToDecimal(o_Input);
         }
 
         private static bool isInputValid(string i_Input)
@@ -150,19 +167,24 @@ namespace Ex01_01
 
         public static bool IsPowerOfTwo(int i_Number)
         {
-            if (i_Number == 0)
+            return IsPowerOfTwo((float) i_Number);
+        }
+
+        public static bool IsPowerOfTwo(float i_Number)
+        {
+            if (i_Number == 0f)
             {
                 return false;
             }
-            
-            else if (i_Number == 1 || i_Number == 2)
+
+            else if (i_Number == 1f || i_Number == 2f)
             {
                 return true;
             }
 
             else
             {
-                return IsPowerOfTwo(i_Number / 2);
+                return IsPowerOfTwo(i_Number / 2f);
             }
         }
 
