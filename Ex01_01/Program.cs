@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Text;
 using static System.Console;
 
 namespace Ex01_01
@@ -31,16 +32,35 @@ namespace Ex01_01
 
         public static void DisplayBinaryInputStatistics(string i_FirstBinary, string i_SecondBinary, string i_ThirdBinary)
         {
-            WriteLine($"The average number of zeroes in your input is {(float)((float)(NumOfZeroes(i_FirstBinary) + NumOfZeroes(i_SecondBinary) + NumOfZeroes(i_ThirdBinary)) / 3)}");
-            WriteLine($"The average number of ones in your input is {(float)((float)(NumOfOnes(i_FirstBinary) + NumOfOnes(i_SecondBinary) + NumOfOnes(i_ThirdBinary)) / 3)}");
+            StringBuilder stringBuilder = new StringBuilder();
+            string formattedString;
+
+            stringBuilder.Append("The average number of zeroes in your input is ");
+            formattedString = string.Format("{0} zeroes per number.\n", ((float)(NumOfZeroes(i_FirstBinary) + NumOfZeroes(i_SecondBinary) + NumOfZeroes(i_ThirdBinary)) / 3));
+            stringBuilder.Append(formattedString);
+
+            stringBuilder.Append("The average number of ones in your input is ");
+            formattedString = string.Format("{0} ones per number.\n", ((float)(NumOfOnes(i_FirstBinary) + NumOfOnes(i_SecondBinary) + NumOfOnes(i_ThirdBinary)) / 3));
+            stringBuilder.Append(formattedString);
+
+            Write(stringBuilder.ToString());         
         }
 
         public static void DisplayDecimalInputStatistics(int i_FirstDecimal, int i_SecondDecimal, int i_ThirdDecimal)
         {
-            WriteLine($"You have entered {NumOfPowerOfTwo(i_FirstDecimal, i_SecondDecimal, i_ThirdDecimal)} numbers that are power of 2.");
-            WriteLine($"You have entered {NumOfAscendingSeries(i_FirstDecimal, i_SecondDecimal, i_ThirdDecimal)} numbers that their digits are an ascending seris.");
-            WriteLine($"The maximum of your inputs is: {Math.Max(Math.Max(i_FirstDecimal, i_SecondDecimal), i_ThirdDecimal)}");
-            WriteLine($"The minimum of your inputs is: {Math.Min(Math.Min(i_FirstDecimal, i_SecondDecimal), i_ThirdDecimal)}");
+            StringBuilder stringBuilder = new StringBuilder();
+            string formattedString;
+
+            stringBuilder.Append("You have entered ");
+            formattedString = string.Format("{0} numbers that are power of 2, and {1} numbers that their digits are an ascending seris.\n",
+                NumOfPowerOfTwo(i_FirstDecimal, i_SecondDecimal, i_ThirdDecimal), NumOfAscendingSeries(i_FirstDecimal, i_SecondDecimal, i_ThirdDecimal));
+            stringBuilder.Append(formattedString);
+
+            formattedString = string.Format("The maximum of your input is: {0}\nThe minimum of your input is: {1}\n",
+                Math.Max(Math.Max(i_FirstDecimal, i_SecondDecimal), i_ThirdDecimal), Math.Min(Math.Min(i_FirstDecimal, i_SecondDecimal), i_ThirdDecimal));
+            stringBuilder.Append(formattedString);
+
+            Write(stringBuilder.ToString());
         }
 
         public static int ReadBinaryInputAndConvertToDecimal(out string o_Input)
