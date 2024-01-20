@@ -13,8 +13,8 @@ namespace Ex01_05
         public static void RunProgram()
         {
             Write("Hi there! Please enter a 9-digit number: ");
-            ReadInput(out string parsedInput);
-            DisplayStatistics(parsedInput);
+            ReadInput(out string userInput);
+            DisplayStatistics(userInput);
         }
 
         public static void ReadInput(out string o_UserInput)
