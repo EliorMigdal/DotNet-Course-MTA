@@ -1,6 +1,5 @@
 using System.Text;
 using static System.Console;
-using static System.Math;
 
 namespace Ex01_05
 {
@@ -14,6 +13,12 @@ namespace Ex01_05
         public static void RunProgram()
         {
             Write("Hi there! Please enter a 9-digit number: ");
+            ReadInput(out string parsedInput);
+            DisplayStatistics(parsedInput);
+        }
+
+        public static void ReadInput(out string o_UserInput)
+        {
             string input = ReadLine();
 
             while (IsInputValid(input) == false)
@@ -21,9 +26,8 @@ namespace Ex01_05
                 HandleInvalidInput(ref input);
             }
 
-            int parsedInput = int.Parse(input);
-            DisplayStatistics(parsedInput);
-        }
+            o_UserInput = input;
+        } 
 
         public static bool IsInputValid(string i_Input)
         {
@@ -46,7 +50,7 @@ namespace Ex01_05
             io_Input = ReadLine();
         }
 
-        public static void DisplayStatistics(int i_Input)
+        public static void DisplayStatistics(string i_Input)
         {
             StringBuilder stringBuilder = new StringBuilder();
 
@@ -54,100 +58,84 @@ namespace Ex01_05
             stringBuilder.AppendLine(string.Format("1. The largest digit in {0} is {1}", i_Input, ExtractMaxDigit(i_Input)));
             stringBuilder.AppendLine(string.Format("2. The smallest digit in {0} is {1}", i_Input, ExtractMinDigit(i_Input)));
             stringBuilder.AppendLine(string.Format("3. The number of digits in {0} that divide by 4 is {1}", i_Input, CountDividingByFour(i_Input)));
-            stringBuilder.AppendLine(string.Format("4. The number of digits in {0} that are bigger than its unity digit, {1}, is {2}", i_Input, i_Input % 10, CountNumOfGreaterThanUnityDigit(i_Input)));
+            stringBuilder.AppendLine(string.Format("4. The number of digits in {0} that are bigger than its unity digit, {1}, is {2}", i_Input, i_Input[i_Input.Length - 1], CountNumOfGreaterThanUnityDigit(i_Input)));
             stringBuilder.AppendLine(string.Format("5. The average of {0}'s digits is {1}", i_Input, CalculateDigitsAverage(i_Input)));
 
             Write(stringBuilder.ToString());
         }
 
-        public static int ExtractMaxDigit(int i_Number)
+        public static int ExtractMaxDigit(string i_Number)
         {
             int maxDigit = int.MinValue;
 
-            while (i_Number > 0)
+            for (int i = 0; i < i_Number.Length; i++)
             {
-                maxDigit = Max(maxDigit, i_Number % 10);
-                i_Number /= 10;
+                if (int.Parse(i_Number[i].ToString()) >= maxDigit)
+                {
+                    maxDigit = int.Parse(i_Number[i].ToString());
+                }
             }
 
             return maxDigit;
         }
 
-        public static int ExtractMinDigit(int i_Number)
+        public static int ExtractMinDigit(string i_Number)
         {
             int minDigit = int.MaxValue;
 
-            while (i_Number > 0)
+            for (int i = 0; i < i_Number.Length; i++)
             {
-                minDigit = Min(minDigit, i_Number % 10);
-                i_Number /= 10;
+                if (int.Parse(i_Number[i].ToString()) <= minDigit)
+                {
+                    minDigit = int.Parse(i_Number[i].ToString());
+                }
             }
 
             return minDigit;
         }
 
-        public static int CountDividingByFour(int i_Number)
+        public static int CountDividingByFour(string i_Number)
         {
             int output = 0;
 
-            while (i_Number > 0)
+            for (int i = 0; i < i_Number.Length; i++)
             {
-                if ((i_Number % 10) % 4 == 0)
+                if (int.Parse(i_Number[i].ToString()) % 4 == 0)
                 {
                     output++;
                 }
-
-                i_Number /= 10;
             }
 
             return output;
         }
 
-        public static int CountNumOfGreaterThanUnityDigit(int i_Number)
+        public static int CountNumOfGreaterThanUnityDigit(string i_Number)
         {
-            int output = 0;
-            int unityDigit = i_Number % 10;
-            i_Number /= 10;
+            int output = 0, unityDigit = int.Parse(i_Number[i_Number.Length - 1].ToString());
 
-            while (i_Number > 0)
+            for (int i = 0; i < i_Number.Length - 1; i++)
             {
-                if (i_Number % 10 > unityDigit)
+                if (int.Parse(i_Number[i].ToString()) > unityDigit)
                 {
                     output++;
                 }
-
-                i_Number /= 10;
             }
 
             return output;
         }
 
-        public static float CalculateDigitsAverage(int i_Number)
+        public static float CalculateDigitsAverage(string i_Number)
         {
-            return (float)((float)SumDigits(i_Number) / (float)CountNumOfDigits(i_Number));
+            return (float)((float)SumDigits(i_Number) / (float)i_Number.Length);
         }
 
-        public static int SumDigits(int i_Number)
+        public static int SumDigits(string i_Number)
         {
             int output = 0;
 
-            while (i_Number > 0)
+            for (int i = 0; i < i_Number.Length; i++)
             {
-                output += i_Number % 10;
-                i_Number /= 10;
-            }
-
-            return output;
-        }
-
-        public static int CountNumOfDigits(int i_Number)
-        {
-            int output = 0;
-
-            while (i_Number > 0)
-            {
-                output++;
-                i_Number /= 10;
+                output += int.Parse(i_Number[i].ToString());
             }
 
             return output;

@@ -6,9 +6,9 @@ namespace Ex01_02
     {
         public static void Main()
         {
-            const int height = 9;
+            const int k_Height = 9;
 
-            PrintDiamond(height);
+            PrintDiamond(k_Height);
         }
 
         public static void PrintDiamond(int i_Height)

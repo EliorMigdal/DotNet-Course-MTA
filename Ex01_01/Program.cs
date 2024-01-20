@@ -21,7 +21,7 @@ namespace Ex01_01
             firstDecimal = ConvertBinaryToDecimal(firstBinaryInput);
             secondDecimal = ConvertBinaryToDecimal(secondBinaryInput);
             thirdDecimal = ConvertBinaryToDecimal(thirdBinaryInput);
-            WriteLine($"You have entered the following numbers: {firstDecimal}, {secondDecimal}, {thirdDecimal}, by that order.");
+            DisplayConversionOutputSorted(firstDecimal, secondDecimal, thirdDecimal);
             WriteLine("Some statistics about your input:");
             DisplayBinaryInputStatistics(firstBinaryInput, secondBinaryInput, thirdBinaryInput);
             DisplayDecimalInputStatistics(firstDecimal, secondDecimal, thirdDecimal);
@@ -58,6 +58,15 @@ namespace Ex01_01
         {
             Write($"{io_Input} is an invalid input! Please enter a 9-digit positive binary number: ");
             io_Input = ReadLine();
+        }
+
+        public static void DisplayConversionOutputSorted(int i_FirstDecimal, int i_SecondDecimal, int i_ThirdDecimal)
+        {
+            int maxOfThree = Math.Max(i_FirstDecimal, Math.Max(i_SecondDecimal, i_ThirdDecimal));
+            int minOfThree = Math.Min(i_FirstDecimal, Math.Min(i_SecondDecimal, i_ThirdDecimal));
+            int middleValue = i_FirstDecimal + i_SecondDecimal + i_ThirdDecimal - maxOfThree - minOfThree;
+
+            WriteLine($"You have entered the following numbers, sorted in ascending order: {minOfThree}, {middleValue}, {maxOfThree}.");
         }
 
         public static void DisplayBinaryInputStatistics(string i_FirstBinary, string i_SecondBinary, string i_ThirdBinary)
@@ -172,20 +181,24 @@ namespace Ex01_01
 
         public static bool IsPowerOfTwo(float i_Number)
         {
+            bool isPowerOfTwo;
+
             if (i_Number == 0f)
             {
-                return false;
+                isPowerOfTwo = false;
             }
 
             else if (i_Number == 1f || i_Number == 2f)
             {
-                return true;
+                isPowerOfTwo = true;
             }
 
             else
             {
-                return IsPowerOfTwo(i_Number / 2f);
+                isPowerOfTwo = IsPowerOfTwo(i_Number / 2f);
             }
+
+            return isPowerOfTwo;
         }
 
         public static short NumOfAscendingSeries(int i_FirstInput, int i_SecondInput, int i_ThirdInput)
