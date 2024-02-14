@@ -15,11 +15,21 @@ public class BoardInspector
     public bool IsThereAnySequenceOfFour(GameBoard i_GameBoard)
     {
         char originalShape = i_GameBoard.GetSymbol(i_GameBoard.LatestPointInserted);
+        bool anySequenceOfFour;
 
-        return AreThereFourInARow(i_GameBoard, i_GameBoard.LatestPointInserted.Row, originalShape) ||
+        if (originalShape.Equals(' '))
+        {
+            anySequenceOfFour = false;
+        }
+
+        else
+        {
+            anySequenceOfFour = AreThereFourInARow(i_GameBoard, i_GameBoard.LatestPointInserted.Row, originalShape) ||
             AreThereFourInAColumn(i_GameBoard, i_GameBoard.LatestPointInserted.Column, originalShape) ||
             AreThereFourInDiagonal(i_GameBoard, originalShape);
+        }
 
+        return anySequenceOfFour;
     }
 
     public bool AreThereFourInARow(GameBoard i_GameBoard, int i_Row, char i_Symbol)
@@ -45,7 +55,7 @@ public class BoardInspector
             }
         }
 
-        return maxStreak;
+        return Math.Max(currentStreak, maxStreak);
     }
 
     public bool AreThereFourInAColumn(GameBoard i_GameBoard, int i_Column, char i_Symbol)
@@ -71,7 +81,7 @@ public class BoardInspector
             }
         }
 
-        return maxStreak;
+        return Math.Max(currentStreak, maxStreak);
     }
 
     public bool AreThereFourInDiagonal(GameBoard i_GameBoard, char i_Symbol)
@@ -101,7 +111,7 @@ public class BoardInspector
             diagonalPoint++;
         }
 
-        return maxSequence;
+        return Math.Max(currentSequence, maxSequence);
     }
 
     public int MaxSequenceInRightDiagonal(GameBoard i_GameBoard, char i_Symbol)
@@ -126,14 +136,14 @@ public class BoardInspector
             diagonalPoint.Row++;
         }
 
-        return maxSequence;
+        return Math.Max(currentSequence, maxSequence);
     }
 
     public bool IsThereADraw(GameBoard i_GameBoard)
     {
         bool isBoardFull = true;
 
-        for (int i = 0; i < i_GameBoard.Board.GetLength(1); i++)
+        for (int i = 0; i < i_GameBoard.GetBoardWidth(); i++)
         {
             if (i_GameBoard.IsColumnVacant(i))
             {

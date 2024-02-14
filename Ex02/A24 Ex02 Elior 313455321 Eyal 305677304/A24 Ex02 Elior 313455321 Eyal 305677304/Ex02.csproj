@@ -56,6 +56,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GameEngine\AIOpponent\AIOpponent.cs" />
+    <Compile Include="GameEngine\AIOpponent\Assistants\BlockStrategist.cs" />
+    <Compile Include="GameEngine\AIOpponent\Assistants\GainStrategist.cs" />
     <Compile Include="GameEngine\GameBoard\GameBoard.cs" />
     <Compile Include="GameEngine\GameEngine.cs" />
     <Compile Include="GameEngine\GameParticipant\GameParticipant.cs" />
@@ -70,10 +72,7 @@
     <Compile Include="GameEngine\BoardInspector\BoardInspector.cs" />
     <Compile Include="GameEngine\Point\Point.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="GameEngine\BoardInspector\" />
-    <Folder Include="GameEngine\Point\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.8">
       <Visible>False</Visible>
@@ -88,7 +87,7 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Ex02.ConsoleUtils">
-      <HintPath>..\..\..\..\Downloads\DN_MTA_2024A_Ex02\Ex02.ConsoleUtils.dll</HintPath>
+      <HintPath>\\Mac\iCloud\Windows Shared Directory\C#\Assignment#2\DN_MTA_2024A_Ex02\Ex02.ConsoleUtils.dll</HintPath>
     </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

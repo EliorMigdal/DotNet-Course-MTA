@@ -48,7 +48,7 @@ public class GameUI
         {
             PlayRound();
 
-            Console.WriteLine("Round has finished!");
+            r_OutputPrinter.PrintRoundOutcome(r_GameEngine.LastRoundOutcome);
             r_OutputPrinter.PrintScore(r_GameEngine.GameParticipants);
             r_InputReader.ReadRoundChoice(out string choice);
 
@@ -70,17 +70,18 @@ public class GameUI
     {
         while (!r_GameEngine.HasGameConcluded())
         {
-            r_OutputPrinter.PrintBoard(r_GameEngine.GameBoard);
-
+            int columnNum;
             string nextPlayer = r_GameEngine.GetNextPlayersName();
+
+            r_OutputPrinter.PrintBoard(r_GameEngine.GameBoard);
             Console.WriteLine($"Now it is {nextPlayer}'s turn!");
 
             if (!nextPlayer.Equals("AI"))
             {
                 r_InputReader.ReadMoveChoice(out string playerMove);
 
-                while (!r_InputValidator.ValidateMoveInput(playerMove, out int columnNum) ||
-                    !r_GameEngine.ValidateMoveLogic(columnNum))
+                while (!r_InputValidator.ValidateMoveInput(playerMove, out columnNum) ||
+                    !r_GameEngine.ValidateMoveLogic(columnNum - 1))
                 {
                     r_OutputPrinter.PrintError();
                     r_InputReader.ReadMoveChoice(out playerMove);
@@ -88,10 +89,24 @@ public class GameUI
 
                 if (playerMove.Equals("Q"))
                 {
-                    r_GameEngine.ForfietPlayer(nextPlayer);
+                    r_GameEngine.ForfietPlayer();
                     break;
                 }
+
+                else
+                {
+                    r_GameEngine.InsertCoin(columnNum - 1);
+                }
             }
+
+            else
+            {
+                r_GameEngine.MakeAIMove();
+            }
+
+            Clear();
         }
+
+        r_OutputPrinter.PrintBoard(r_GameEngine.GameBoard);
     }
 }
