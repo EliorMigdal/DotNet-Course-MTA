@@ -21,6 +21,7 @@ public class GameUI
         GameInfo gameInfo = new GameInfo();
 
         r_InputReader.ReadBoardSize(out string width, out string height);
+
         while (!r_InputValidator.ValidateBoardSize(width, height, ref gameInfo)) 
         {
             Console.WriteLine("Invalid input!");
@@ -28,6 +29,7 @@ public class GameUI
         }
 
         r_InputReader.ReadParticipantsChoice(out string participantsChoice);
+
         while (!r_InputValidator.ValidateParticipantsChoice(participantsChoice, ref gameInfo))
         {
             r_OutputPrinter.PrintError();
@@ -76,17 +78,17 @@ public class GameUI
             {
                 r_InputReader.ReadMoveChoice(out string playerMove);
 
-                if (playerMove.Equals("Q"))
-                {
-                    r_GameEngine.ForfietPlayer(nextPlayer);
-                    break;
-                }
-
                 while (!r_InputValidator.ValidateMoveInput(playerMove, out int columnNum) ||
                     !r_GameEngine.ValidateMoveLogic(columnNum))
                 {
                     r_OutputPrinter.PrintError();
                     r_InputReader.ReadMoveChoice(out playerMove);
+                }
+
+                if (playerMove.Equals("Q"))
+                {
+                    r_GameEngine.ForfietPlayer(nextPlayer);
+                    break;
                 }
             }
         }

@@ -37,7 +37,7 @@
 
     public bool ValidateMoveInput(string i_MoveChoice, out int o_ColumnNum)
     {
-        return int.TryParse(i_MoveChoice, out o_ColumnNum);
+        return int.TryParse(i_MoveChoice, out o_ColumnNum) || i_MoveChoice.Equals("Q");
     }
 
     public bool ValidateRoundInput(string i_RoundChoice, out bool o_RoundChoice)

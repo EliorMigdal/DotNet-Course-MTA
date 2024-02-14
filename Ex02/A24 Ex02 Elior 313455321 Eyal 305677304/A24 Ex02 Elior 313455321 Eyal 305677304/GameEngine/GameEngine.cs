@@ -7,8 +7,7 @@ public class GameEngine
 
     public void InitializeEngine(GameInfo i_GameInfo)
     {
-        GameBoard = new GameBoard();
-        GameBoard.Board = new char[i_GameInfo.Width, i_GameInfo.Height];
+        GameBoard = new GameBoard(i_GameInfo.Height, i_GameInfo.Width);
         GameParticipants = new List<GameParticipant>
         {
             new GameParticipant("P1", false)
@@ -23,8 +22,6 @@ public class GameEngine
         {
             GameParticipants.Add(new GameParticipant("P2", false));
         }
-
-        GameBoard.InitializeBoard();
     }
 
     public bool HasGameConcluded()
