@@ -4,6 +4,7 @@ public class GameEngine
 {
     public GameBoard GameBoard { get; set; }
     public List<GameParticipant> GameParticipants {  get; set; }
+    public BoardInspector BoardInspector { get; set; }
 
     public void InitializeEngine(GameInfo i_GameInfo)
     {
@@ -22,11 +23,13 @@ public class GameEngine
         {
             GameParticipants.Add(new GameParticipant("P2", false));
         }
+
+        BoardInspector = new BoardInspector();
     }
 
     public bool HasGameConcluded()
     {
-        return false;
+        return BoardInspector.HasGameConcluded(GameBoard);
     }
 
     public string GetNextPlayersName()

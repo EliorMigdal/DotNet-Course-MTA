@@ -1,4 +1,4 @@
-﻿using System.Security.Cryptography;
+﻿using System;
 
 public class GameBoard
 {
@@ -9,7 +9,6 @@ public class GameBoard
     {
         Board = new char[i_Height, i_Width];
         InitializeBoard();
-
         LatestPointInserted = new Point();
     }
 
@@ -71,5 +70,46 @@ public class GameBoard
         }
 
         return firstVacancy;
+    }
+
+    public Point GetTopLeftPointInDiagonal(Point i_Point)
+    {
+        int maxAxisValue = Math.Max(i_Point.Row, i_Point.Column);
+        return new Point(i_Point.Row - maxAxisValue, i_Point.Column - maxAxisValue);
+    }
+
+    public Point GetTopRightPointInDiagonal(Point i_Point)
+    {
+        int startPointRow = i_Point.Row, startPointColumn = i_Point.Column;
+
+        while (IsInBounds(startPointRow, startPointColumn))
+        {
+            startPointRow--;
+            startPointColumn++;
+        }
+
+        if (startPointRow < 0)
+        {
+            startPointRow++;
+        }
+
+        else
+        {
+            startPointColumn--;
+        }
+
+        return new Point(startPointRow, startPointColumn);
+
+    }
+
+    public bool IsInBounds(int i_Row, int i_Column)
+    {
+        return i_Row >= 0 && i_Row < GetBoardHeight() &&
+            i_Column >= 0 && i_Column < GetBoardWidth();
+    }
+
+    public bool IsInBounds(Point i_Point)
+    {
+        return IsInBounds(i_Point.Row, i_Point.Column);
     }
 }

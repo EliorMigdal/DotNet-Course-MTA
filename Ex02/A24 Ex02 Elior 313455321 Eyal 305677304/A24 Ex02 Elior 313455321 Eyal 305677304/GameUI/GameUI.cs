@@ -1,4 +1,5 @@
 ﻿using System;
+using static Ex02.ConsoleUtils.Screen;
 
 public class GameUI
 {
