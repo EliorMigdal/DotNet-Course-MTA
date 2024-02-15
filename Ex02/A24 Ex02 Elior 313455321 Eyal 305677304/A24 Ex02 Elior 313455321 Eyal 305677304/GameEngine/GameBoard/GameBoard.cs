@@ -23,7 +23,7 @@ public class GameBoard
         }
     }
 
-    public bool IsColumnVacant(int i_ColumnNum)
+    public bool IsThereAFreeSpaceInColumn(int i_ColumnNum)
     {
         return Board[0, i_ColumnNum] == ' ';
     }
@@ -40,7 +40,7 @@ public class GameBoard
 
     public void InsertToAColumn(int i_Column, char i_Shape)
     {
-        int firstVacancy = GetLastVacancy(i_Column);
+        int firstVacancy = GetLastFreeSpaceInColumn(i_Column);
 
         LatestPointInserted.Row = firstVacancy;
         LatestPointInserted.Column = i_Column;
@@ -57,7 +57,7 @@ public class GameBoard
         return GetSymbol(i_Point.Row, i_Point.Column);
     }
 
-    public int GetLastVacancy(int i_Column)
+    public int GetLastFreeSpaceInColumn(int i_Column)
     {
         int lastVacancy = -1;
 
@@ -85,10 +85,14 @@ public class GameBoard
         {
             startPointRow--;
             startPointColumn--;
-        }
 
-        startPointColumn++;
-        startPointRow++;
+            if (!IsInBounds(startPointRow, startPointColumn))
+            {
+                startPointRow++;
+                startPointColumn++;
+                break;
+            }
+        }
 
         return new Point(startPointRow, startPointColumn);
     }
@@ -101,10 +105,14 @@ public class GameBoard
         {
             startPointRow--;
             startPointColumn++;
-        }
 
-        startPointRow++;
-        startPointColumn--;
+            if (!IsInBounds(startPointRow, startPointColumn))
+            {
+                startPointRow++;
+                startPointColumn--;
+                break;
+            }
+        }
 
         return new Point(startPointRow, startPointColumn);
     }

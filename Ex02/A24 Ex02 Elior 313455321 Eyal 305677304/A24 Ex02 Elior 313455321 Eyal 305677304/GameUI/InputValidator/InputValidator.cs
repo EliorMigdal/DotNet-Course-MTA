@@ -16,7 +16,7 @@
         return isSizeValid;
     }
 
-    private bool isInRange(int i_Value)
+    public bool isInRange(int i_Value)
     {
         return i_Value.CompareTo((int) eDimensions.MinValue) >= 0 
             && i_Value.CompareTo((int) eDimensions.MaxValue) <= 0;
@@ -25,11 +25,12 @@
     public bool ValidateParticipantsChoice(string i_Choice, ref GameInfo o_GameInfo) 
     {
         bool isANumber = int.TryParse(i_Choice, out int choice);
-        bool isChoiceValid = isANumber && (choice.Equals((int) eUserChoice.PLAY_AI) || choice.Equals((int) eUserChoice.PLAY_PLAYER));
+        bool isChoiceValid = isANumber && (choice.Equals((int) eUserChoice.PlayAI) 
+            || choice.Equals((int) eUserChoice.PlayAnotherPlayer));
 
         if (isChoiceValid)
         {
-            o_GameInfo.PlayTheAI = choice.Equals((int) eUserChoice.PLAY_AI);
+            o_GameInfo.PlayTheAI = choice.Equals((int) eUserChoice.PlayAI);
         }
 
         return isChoiceValid;

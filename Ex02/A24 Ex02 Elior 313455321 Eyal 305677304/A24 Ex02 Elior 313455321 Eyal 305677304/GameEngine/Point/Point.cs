@@ -15,4 +15,9 @@
     {
         return new Point(i_Point.Row + 1, i_Point.Column + 1);
     }
+
+    public static Point operator --(Point i_Point)
+    {
+        return new Point(i_Point.Row - 1, i_Point.Column - 1);
+    }
 }

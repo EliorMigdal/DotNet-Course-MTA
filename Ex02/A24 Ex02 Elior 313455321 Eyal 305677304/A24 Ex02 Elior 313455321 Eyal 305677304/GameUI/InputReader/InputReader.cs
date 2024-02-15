@@ -6,18 +6,17 @@ public class InputReader
     {
         Console.WriteLine("Please enter your desired board's size.");
         Console.WriteLine($"Board size is ranged from {(int) eDimensions.MinValue}x{(int) eDimensions.MinValue} " +
-            $"to {(int)eDimensions.MaxValue}x{(int) eDimensions.MaxValue}.");
-
+            $"to {(int) eDimensions.MaxValue}x{(int) eDimensions.MaxValue}.");
         Console.Write("Please enter board width: ");
         o_Width = Console.ReadLine();
-
         Console.Write("Please enter board height: ");
         o_Height = Console.ReadLine();
     }
 
     public void ReadParticipantsChoice(out string o_UserChoice)
     {
-        Console.WriteLine($"Please enter {(int) eUserChoice.PLAY_AI} to play against the AI, or {(int) eUserChoice.PLAY_PLAYER} to play agains another player.");
+        Console.WriteLine($"Please enter {(int) eUserChoice.PlayAI} to play against the AI, " +
+            $"or {(int) eUserChoice.PlayAnotherPlayer} to play agains another player.");
         Console.Write("Enter your choice: ");
         o_UserChoice = Console.ReadLine();
     }

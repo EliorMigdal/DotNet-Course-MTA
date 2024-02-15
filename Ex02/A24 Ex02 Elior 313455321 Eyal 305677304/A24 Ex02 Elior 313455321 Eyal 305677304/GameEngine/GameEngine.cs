@@ -6,9 +6,8 @@ public class GameEngine
     public GameBoard GameBoard { get; set; }
     public List<GameParticipant> GameParticipants {  get; set; }
     public BoardInspector BoardInspector { get; set; }
-    public GameParticipant CurrentTurn {  get; set; }
+    public GameParticipant CurrentPlayer {  get; set; }
     public string LastRoundOutcome { get; set; }
-    public AIOpponent AI { get; set; }
 
     public void InitializeEngine(GameInfo i_GameInfo)
     {
@@ -23,7 +22,6 @@ public class GameEngine
         if (i_GameInfo.PlayTheAI)
         {
             GameParticipants.Add(new GameParticipant("AI", true, 'X'));
-            AI = new AIOpponent();
         }
 
         else
@@ -31,7 +29,7 @@ public class GameEngine
             GameParticipants.Add(new GameParticipant("P2", false, 'X'));
         }
 
-        CurrentTurn = GameParticipants[0];
+        CurrentPlayer = GameParticipants[0];
     }
 
     public bool HasGameConcluded()
@@ -41,8 +39,8 @@ public class GameEngine
 
         if (isThereAWinner)
         {
-            CurrentTurn.AddPoint();
-            LastRoundOutcome = CurrentTurn.Name;
+            CurrentPlayer.Score++;
+            LastRoundOutcome = CurrentPlayer.Name;
         }
 
         else if (isThereADraw)
@@ -50,7 +48,7 @@ public class GameEngine
             LastRoundOutcome = "Draw";
         }
 
-        else if (!GameBoard.GetSymbol(GameBoard.LatestPointInserted).Equals(' '))
+        else if (!HasGameJustStarted())
         {
             UpdateTurn();
         }
@@ -58,48 +56,60 @@ public class GameEngine
         return isThereAWinner || isThereADraw;
     }
 
+    public bool HasGameJustStarted()
+    {
+        return GameBoard.GetSymbol(GameBoard.LatestPointInserted).Equals(' ');
+    }
+
     public string GetNextPlayersName()
     {
-        return CurrentTurn.Name;
+        return CurrentPlayer.Name;
+    }
+
+    public bool IsItAITurn()
+    {
+        return CurrentPlayer.IsAI;
     }
 
     public bool ValidateMoveLogic(int i_ColumnNum)
     {
         bool isValid = i_ColumnNum >= 0 && i_ColumnNum <= GameBoard.GetBoardWidth() - 1;
 
-        return isValid && GameBoard.IsColumnVacant(i_ColumnNum);
+        return isValid && GameBoard.IsThereAFreeSpaceInColumn(i_ColumnNum);
     }
 
     public void ForfietPlayer()
     {
         UpdateTurn();
-        CurrentTurn.AddPoint();
+        CurrentPlayer.Score++;
+        LastRoundOutcome = CurrentPlayer.Name;
     }
 
     public void ResetBoard()
     {
         GameBoard.InitializeBoard();
-        CurrentTurn = GameParticipants[0];
+        CurrentPlayer = GameParticipants[0];
     }
 
     public void InsertCoin(int i_Column)
     {
-        char coinSymbol = CurrentTurn.Symbol;
+        char coinSymbol = CurrentPlayer.Symbol;
 
         GameBoard.InsertToAColumn(i_Column, coinSymbol);
     }
 
     public void UpdateTurn()
     {
-        int i = GameParticipants.FindIndex(p => p.Equals(CurrentTurn));
-        CurrentTurn = GameParticipants[(i+1) % GameParticipants.Count];
+        int i = GameParticipants.FindIndex(p => p.Equals(CurrentPlayer));
+
+        CurrentPlayer = GameParticipants[(i + 1) % GameParticipants.Count];
     }
 
     public void MakeAIMove()
     {
         int column = new Random().Next(0, GameBoard.GetBoardWidth());
 
-        while (!GameBoard.IsColumnVacant(column))
+        while (!GameBoard.IsThereAFreeSpaceInColumn(column))
         {
             column = new Random().Next(0, GameBoard.GetBoardWidth());
         }

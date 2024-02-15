@@ -13,8 +13,8 @@ public class GameUI
         Console.WriteLine("Welcome to our 4-in-a-row game!");
         GameInfo gameInfo = ReadGameInfo();
         r_GameEngine.InitializeEngine(gameInfo);
-
         RunGame();
+        ExitGame();
     }
 
     public GameInfo ReadGameInfo()
@@ -62,6 +62,12 @@ public class GameUI
             {
                 Console.WriteLine("Starting another round!");
                 r_GameEngine.ResetBoard();
+                Clear();
+            }
+
+            else
+            {
+                Console.WriteLine("Farewell!");
             }
         }
     }
@@ -70,43 +76,68 @@ public class GameUI
     {
         while (!r_GameEngine.HasGameConcluded())
         {
-            int columnNum;
-            string nextPlayer = r_GameEngine.GetNextPlayersName();
-
             r_OutputPrinter.PrintBoard(r_GameEngine.GameBoard);
-            Console.WriteLine($"Now it is {nextPlayer}'s turn!");
+            Console.WriteLine($"Now it is {r_GameEngine.GetNextPlayersName()}'s turn!");
 
-            if (!nextPlayer.Equals("AI"))
+            if (!r_GameEngine.IsItAITurn())
             {
-                r_InputReader.ReadMoveChoice(out string playerMove);
-
-                while (!r_InputValidator.ValidateMoveInput(playerMove, out columnNum) ||
-                    !r_GameEngine.ValidateMoveLogic(columnNum - 1))
+                if (HandlePlayerMove().Equals("Q"))
                 {
-                    r_OutputPrinter.PrintError();
-                    r_InputReader.ReadMoveChoice(out playerMove);
-                }
-
-                if (playerMove.Equals("Q"))
-                {
-                    r_GameEngine.ForfietPlayer();
+                    Clear();
                     break;
-                }
-
-                else
-                {
-                    r_GameEngine.InsertCoin(columnNum - 1);
                 }
             }
 
             else
             {
-                r_GameEngine.MakeAIMove();
+                HandleAIMove();
             }
 
             Clear();
         }
 
         r_OutputPrinter.PrintBoard(r_GameEngine.GameBoard);
+    }
+
+    public string HandlePlayerMove()
+    {
+        int columnNum;
+        r_InputReader.ReadMoveChoice(out string playerMove);
+
+        while (!IsMoveValid(playerMove, out columnNum))
+        {
+            if (playerMove.Equals("Q"))
+            {
+                r_GameEngine.ForfietPlayer();
+                break;
+            }
+
+            r_OutputPrinter.PrintError();
+            r_InputReader.ReadMoveChoice(out playerMove);
+        }
+
+        if (!playerMove.Equals("Q"))
+        {
+            r_GameEngine.InsertCoin(columnNum - 1);
+        }
+
+        return playerMove;
+    }
+
+    public bool IsMoveValid(string i_PlayerMove, out int o_Column)
+    {
+        return r_InputValidator.ValidateMoveInput(i_PlayerMove, out o_Column) &&
+            r_GameEngine.ValidateMoveLogic(o_Column - 1);
+    }
+
+    public void HandleAIMove()
+    {
+        r_GameEngine.MakeAIMove();
+    }
+
+    public void ExitGame()
+    {
+        Console.WriteLine("Press Enter to exit...");
+        Console.ReadLine();
     }
 }

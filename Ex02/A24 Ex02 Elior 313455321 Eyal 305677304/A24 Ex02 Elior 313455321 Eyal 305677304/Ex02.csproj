@@ -58,6 +58,7 @@
     <Compile Include="GameEngine\AIOpponent\AIOpponent.cs" />
     <Compile Include="GameEngine\AIOpponent\Assistants\BlockStrategist.cs" />
     <Compile Include="GameEngine\AIOpponent\Assistants\GainStrategist.cs" />
+    <Compile Include="GameEngine\AIOpponent\Assistants\SequenceAnalyzer.cs" />
     <Compile Include="GameEngine\GameBoard\GameBoard.cs" />
     <Compile Include="GameEngine\GameEngine.cs" />
     <Compile Include="GameEngine\GameParticipant\GameParticipant.cs" />

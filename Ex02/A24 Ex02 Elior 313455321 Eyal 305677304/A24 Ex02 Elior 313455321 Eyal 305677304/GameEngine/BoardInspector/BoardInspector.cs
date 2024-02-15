@@ -2,11 +2,6 @@
 
 public class BoardInspector
 {
-    public bool HasGameConcluded(GameBoard i_GameBoard)
-    {
-        return IsThereAWinner(i_GameBoard) || IsThereADraw(i_GameBoard);
-    }
-
     public bool IsThereAWinner(GameBoard i_GameBoard)
     {
         return IsThereAnySequenceOfFour(i_GameBoard);
@@ -145,7 +140,7 @@ public class BoardInspector
 
         for (int i = 0; i < i_GameBoard.GetBoardWidth(); i++)
         {
-            if (i_GameBoard.IsColumnVacant(i))
+            if (i_GameBoard.IsThereAFreeSpaceInColumn(i))
             {
                 isBoardFull = false;
                 break;
