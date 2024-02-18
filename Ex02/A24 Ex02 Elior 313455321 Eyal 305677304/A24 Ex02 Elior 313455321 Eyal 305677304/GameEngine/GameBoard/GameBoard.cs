@@ -1,6 +1,4 @@
-﻿using System;
-
-public class GameBoard
+﻿public class GameBoard
 {
     public char[,] Board { get; set; }
     public Point LatestPointInserted { get; set; }
@@ -40,7 +38,7 @@ public class GameBoard
 
     public void InsertToAColumn(int i_Column, char i_Shape)
     {
-        int firstVacancy = GetLastFreeSpaceInColumn(i_Column);
+        int firstVacancy = getLastFreeSpaceInColumn(i_Column);
 
         LatestPointInserted.Row = firstVacancy;
         LatestPointInserted.Column = i_Column;
@@ -57,7 +55,7 @@ public class GameBoard
         return GetSymbol(i_Point.Row, i_Point.Column);
     }
 
-    public int GetLastFreeSpaceInColumn(int i_Column)
+    private int getLastFreeSpaceInColumn(int i_Column)
     {
         int lastVacancy = -1;
 
@@ -80,41 +78,27 @@ public class GameBoard
     public Point GetTopLeftPointInDiagonal(Point i_Point)
     {
         int startPointRow = i_Point.Row, startPointColumn = i_Point.Column;
-        
+
         while (IsInBounds(startPointRow, startPointColumn))
         {
             startPointRow--;
             startPointColumn--;
-
-            if (!IsInBounds(startPointRow, startPointColumn))
-            {
-                startPointRow++;
-                startPointColumn++;
-                break;
-            }
         }
 
-        return new Point(startPointRow, startPointColumn);
+        return new Point(startPointRow + 1, startPointColumn + 1);
     }
 
     public Point GetTopRightPointInDiagonal(Point i_Point)
     {
         int startPointRow = i_Point.Row, startPointColumn = i_Point.Column;
-      
+
         while (IsInBounds(startPointRow, startPointColumn))
         {
             startPointRow--;
             startPointColumn++;
-
-            if (!IsInBounds(startPointRow, startPointColumn))
-            {
-                startPointRow++;
-                startPointColumn--;
-                break;
-            }
         }
 
-        return new Point(startPointRow, startPointColumn);
+        return new Point(startPointRow + 1, startPointColumn - 1);
     }
 
     public bool IsInBounds(int i_Row, int i_Column)
