@@ -10,14 +10,19 @@ public class GameUI
 
     public void StartGame()
     {
-        Console.WriteLine("Welcome to our 4-in-a-row game!");
-        GameInfo gameInfo = ReadGameInfo();
-        r_GameEngine.InitializeEngine(gameInfo);
-        RunGame();
-        ExitGame();
+        initializeGame();
+        runGame();
+        exitGame();
     }
 
-    public GameInfo ReadGameInfo()
+    private void initializeGame()
+    {
+        Console.WriteLine("Welcome to our 4-in-a-row game!");
+        GameInfo gameInfo = readGameInfo();
+        r_GameEngine.InitializeEngine(gameInfo);
+    }
+
+    private GameInfo readGameInfo()
     {
         GameInfo gameInfo = new GameInfo();
 
@@ -25,7 +30,7 @@ public class GameUI
 
         while (!r_InputValidator.ValidateBoardSize(width, height, ref gameInfo)) 
         {
-            Console.WriteLine("Invalid input!");
+            r_OutputPrinter.PrintError("Invalid board size!");
             r_InputReader.ReadBoardSize(out width, out height);
         }
 
@@ -33,64 +38,49 @@ public class GameUI
 
         while (!r_InputValidator.ValidateParticipantsChoice(participantsChoice, ref gameInfo))
         {
-            r_OutputPrinter.PrintError();
+            r_OutputPrinter.PrintError("Invalid participants choice!");
             r_InputReader.ReadParticipantsChoice(out participantsChoice);
         }
 
         return gameInfo;
     }
 
-    public void RunGame()
+    private void runGame()
     {
         bool playAnotherRound = true;
 
         while (playAnotherRound)
         {
-            PlayRound();
-
-            r_OutputPrinter.PrintRoundOutcome(r_GameEngine.LastRoundOutcome);
-            r_OutputPrinter.PrintScore(r_GameEngine.GameParticipants);
-            r_InputReader.ReadRoundChoice(out string choice);
-
-            while (!r_InputValidator.ValidateRoundInput(choice, out playAnotherRound))
-            {
-                r_OutputPrinter.PrintError();
-                r_InputReader.ReadRoundChoice(out choice);
-            }
+            playRound();
+            finishRound();
+            playAnotherRound = playAgainChoice();
 
             if (playAnotherRound)
             {
-                Console.WriteLine("Starting another round!");
-                r_GameEngine.ResetBoard();
-                Clear();
-            }
-
-            else
-            {
-                Console.WriteLine("Farewell!");
+                resetGame();
             }
         }
+
+        Console.WriteLine("Farewell!");
     }
 
-    public void PlayRound()
+    private void playRound()
     {
+        Console.WriteLine("Round is starting!");
+
         while (!r_GameEngine.HasGameConcluded())
         {
             r_OutputPrinter.PrintBoard(r_GameEngine.GameBoard);
             Console.WriteLine($"Now it is {r_GameEngine.GetNextPlayersName()}'s turn!");
 
-            if (!r_GameEngine.IsItAITurn())
+            if (r_GameEngine.IsItAITurn())
             {
-                if (HandlePlayerMove().Equals("Q"))
-                {
-                    Clear();
-                    break;
-                }
+                handleAIMove();
             }
 
             else
             {
-                HandleAIMove();
+                handlePlayerMove();
             }
 
             Clear();
@@ -99,43 +89,74 @@ public class GameUI
         r_OutputPrinter.PrintBoard(r_GameEngine.GameBoard);
     }
 
-    public string HandlePlayerMove()
+    private void handlePlayerMove()
     {
         int columnNum;
+
         r_InputReader.ReadMoveChoice(out string playerMove);
 
-        while (!IsMoveValid(playerMove, out columnNum))
+        while (!isMoveValid(playerMove, out columnNum))
         {
-            if (playerMove.Equals("Q"))
-            {
-                r_GameEngine.ForfietPlayer();
-                break;
-            }
-
-            r_OutputPrinter.PrintError();
+            r_OutputPrinter.PrintError("Invalid column choice!\nColumn is full or out of range.");
             r_InputReader.ReadMoveChoice(out playerMove);
         }
 
-        if (!playerMove.Equals("Q"))
+        if (playerMove.Equals("Q"))
+        {
+            r_GameEngine.ForfietPlayer();
+        }
+
+        else
         {
             r_GameEngine.InsertCoin(columnNum - 1);
         }
-
-        return playerMove;
     }
-
-    public bool IsMoveValid(string i_PlayerMove, out int o_Column)
+    
+    private bool isMoveValid(string i_PlayerMove, out int o_Column)
     {
-        return r_InputValidator.ValidateMoveInput(i_PlayerMove, out o_Column) &&
-            r_GameEngine.ValidateMoveLogic(o_Column - 1);
+        bool isMoveValid = r_InputValidator.ValidateMoveInput(i_PlayerMove, out o_Column);
+
+        if (!i_PlayerMove.Equals("Q"))
+        {
+            isMoveValid &= r_GameEngine.ValidateMoveLogic(o_Column - 1);
+        }
+
+        return isMoveValid;
     }
 
-    public void HandleAIMove()
+    private void handleAIMove()
     {
         r_GameEngine.MakeAIMove();
     }
 
-    public void ExitGame()
+    private void finishRound()
+    {
+        r_OutputPrinter.PrintRoundOutcome(r_GameEngine.RoundResult);
+        r_OutputPrinter.PrintScore(r_GameEngine.GameParticipants);
+    }
+
+    private bool playAgainChoice()
+    {
+        bool playAgain;
+
+        r_InputReader.ReadRoundChoice(out string choice);
+
+        while (!r_InputValidator.ValidateRoundInput(choice, out playAgain))
+        {
+            r_OutputPrinter.PrintError("Invalid choice!");
+            r_InputReader.ReadRoundChoice(out choice);
+        }
+
+        return playAgain;
+    }
+
+    private void resetGame()
+    {
+        r_GameEngine.ResetEngineData();
+        Clear();
+    }
+
+    private void exitGame()
     {
         Console.WriteLine("Press Enter to exit...");
         Console.ReadLine();

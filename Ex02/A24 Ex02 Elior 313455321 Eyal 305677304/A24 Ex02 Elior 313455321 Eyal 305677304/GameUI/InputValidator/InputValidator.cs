@@ -16,7 +16,7 @@
         return isSizeValid;
     }
 
-    public bool isInRange(int i_Value)
+    private bool isInRange(int i_Value)
     {
         return i_Value.CompareTo((int) eDimensions.MinValue) >= 0 
             && i_Value.CompareTo((int) eDimensions.MaxValue) <= 0;
@@ -45,15 +45,7 @@
     {
         bool isInputValid = i_RoundChoice.Equals("Y") || i_RoundChoice.Equals("N");
 
-        if (isInputValid)
-        {
-            o_RoundChoice = i_RoundChoice.Equals("Y") ? true : false;
-        }
-
-        else
-        {
-            o_RoundChoice = false;
-        }
+        o_RoundChoice = i_RoundChoice.Equals("Y");
 
         return isInputValid;
     }

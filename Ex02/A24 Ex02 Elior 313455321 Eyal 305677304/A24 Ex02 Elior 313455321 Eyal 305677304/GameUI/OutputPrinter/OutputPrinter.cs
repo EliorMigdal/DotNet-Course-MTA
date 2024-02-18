@@ -49,25 +49,28 @@ public class OutputPrinter
         Console.WriteLine(stringBuilder.ToString());
     }
 
-    public void PrintRoundOutcome(string i_Outcome)
+    public void PrintRoundOutcome(RoundResult i_RoundResult)
     {
         Console.WriteLine("Round has finished!");
         Console.Write("Round outcome: ");
 
-        switch (i_Outcome)
+        switch (i_RoundResult.RoundOutcome)
         {
-            case "Draw":
+            case eRoundOutcome.Draw:
                 Console.WriteLine("Draw.");
                 break;
 
+            case eRoundOutcome.Conclusion:
+                Console.WriteLine($"{i_RoundResult.RoundWinner} wins!");
+                break;
+
             default:
-                Console.WriteLine($"{i_Outcome} wins!");
                 break;
         }
     }
 
-    public void PrintError()
+    public void PrintError(string i_Error)
     {
-        Console.WriteLine("Invalid input! Please try again!");
+        Console.WriteLine($"Error: {i_Error}");
     }
 }

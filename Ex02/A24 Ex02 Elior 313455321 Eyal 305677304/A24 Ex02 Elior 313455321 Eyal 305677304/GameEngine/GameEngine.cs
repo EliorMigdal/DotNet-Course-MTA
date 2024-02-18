@@ -5,14 +5,14 @@ public class GameEngine
 {
     public GameBoard GameBoard { get; set; }
     public List<GameParticipant> GameParticipants {  get; set; }
-    public BoardInspector BoardInspector { get; set; }
-    public GameParticipant CurrentPlayer {  get; set; }
-    public string LastRoundOutcome { get; set; }
+    public RoundResult RoundResult { get; set; }
+    private readonly BoardInspector r_BoardInspector = new BoardInspector();
+    private GameParticipant m_CurrentPlayer = null;
 
     public void InitializeEngine(GameInfo i_GameInfo)
     {
         GameBoard = new GameBoard(i_GameInfo.Height, i_GameInfo.Width);
-        BoardInspector = new BoardInspector();
+        RoundResult = new RoundResult();
 
         GameParticipants = new List<GameParticipant>
         {
@@ -29,46 +29,46 @@ public class GameEngine
             GameParticipants.Add(new GameParticipant("P2", false, 'X'));
         }
 
-        CurrentPlayer = GameParticipants[0];
+        m_CurrentPlayer = GameParticipants[0];
+        RoundResult.RoundWinner = string.Empty;
     }
 
     public bool HasGameConcluded()
     {
-        bool isThereAWinner = BoardInspector.IsThereAWinner(GameBoard);
-        bool isThereADraw = BoardInspector.IsThereADraw(GameBoard);
+        bool isThereAWinner = r_BoardInspector.IsThereAWinner(GameBoard);
+        bool isThereADraw = r_BoardInspector.IsThereADraw(GameBoard);
 
         if (isThereAWinner)
         {
-            CurrentPlayer.Score++;
-            LastRoundOutcome = CurrentPlayer.Name;
+            handleWinner();
         }
 
         else if (isThereADraw)
         {
-            LastRoundOutcome = "Draw";
+            handleDraw();
         }
 
-        else if (!HasGameJustStarted())
+        else if (!hasGameJustStarted())
         {
-            UpdateTurn();
+            updateTurn();
         }
 
-        return isThereAWinner || isThereADraw;
+        return isThereAWinner || isThereADraw || !RoundResult.RoundWinner.Equals(string.Empty);
     }
 
-    public bool HasGameJustStarted()
+    private bool hasGameJustStarted()
     {
         return GameBoard.GetSymbol(GameBoard.LatestPointInserted).Equals(' ');
     }
 
     public string GetNextPlayersName()
     {
-        return CurrentPlayer.Name;
+        return m_CurrentPlayer.Name;
     }
 
     public bool IsItAITurn()
     {
-        return CurrentPlayer.IsAI;
+        return m_CurrentPlayer.IsAI;
     }
 
     public bool ValidateMoveLogic(int i_ColumnNum)
@@ -80,29 +80,29 @@ public class GameEngine
 
     public void ForfietPlayer()
     {
-        UpdateTurn();
-        CurrentPlayer.Score++;
-        LastRoundOutcome = CurrentPlayer.Name;
+        updateTurn();
+        handleWinner();
     }
 
-    public void ResetBoard()
+    public void ResetEngineData()
     {
         GameBoard.InitializeBoard();
-        CurrentPlayer = GameParticipants[0];
+        m_CurrentPlayer = GameParticipants[0];
+        RoundResult.RoundWinner = string.Empty;
     }
 
     public void InsertCoin(int i_Column)
     {
-        char coinSymbol = CurrentPlayer.Symbol;
+        char coinSymbol = m_CurrentPlayer.Symbol;
 
         GameBoard.InsertToAColumn(i_Column, coinSymbol);
     }
 
-    public void UpdateTurn()
+    private void updateTurn()
     {
-        int i = GameParticipants.FindIndex(p => p.Equals(CurrentPlayer));
+        int i = GameParticipants.FindIndex(p => p.Equals(m_CurrentPlayer));
 
-        CurrentPlayer = GameParticipants[(i + 1) % GameParticipants.Count];
+        m_CurrentPlayer = GameParticipants[(i + 1) % GameParticipants.Count];
     }
 
     public void MakeAIMove()
@@ -115,5 +115,18 @@ public class GameEngine
         }
 
         InsertCoin(column);
+    }
+
+    private void handleWinner()
+    {
+        m_CurrentPlayer.Score++;
+        RoundResult.RoundWinner = m_CurrentPlayer.Name;
+        RoundResult.RoundOutcome = eRoundOutcome.Conclusion;
+    }
+
+    private void handleDraw()
+    {
+        RoundResult.RoundWinner = string.Empty;
+        RoundResult.RoundOutcome = eRoundOutcome.Draw;
     }
 }
