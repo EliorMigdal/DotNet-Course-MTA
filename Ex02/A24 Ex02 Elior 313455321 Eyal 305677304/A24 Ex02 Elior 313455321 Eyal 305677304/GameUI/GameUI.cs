@@ -17,7 +17,7 @@ public class GameUI
 
     private void initializeGame()
     {
-        Console.WriteLine("Welcome to our 4-in-a-row game!");
+        r_OutputPrinter.PrintMessage("Welcome to our 4-in-a-row game!");
         GameInfo gameInfo = readGameInfo();
         r_GameEngine.InitializeEngine(gameInfo);
     }
@@ -61,18 +61,15 @@ public class GameUI
             }
         }
 
-        Console.WriteLine("Farewell!");
+        r_OutputPrinter.PrintMessage("Farewell!");
     }
 
     private void playRound()
     {
-        Console.WriteLine("Round is starting!");
+        r_OutputPrinter.PrintMessage("Round is starting!");
 
         while (!r_GameEngine.HasGameConcluded())
         {
-            r_OutputPrinter.PrintBoard(r_GameEngine.GameBoard);
-            Console.WriteLine($"Now it is {r_GameEngine.GetNextPlayersName()}'s turn!");
-
             if (r_GameEngine.IsItAITurn())
             {
                 handleAIMove();
@@ -80,6 +77,8 @@ public class GameUI
 
             else
             {
+                r_OutputPrinter.PrintBoard(r_GameEngine.GameBoard);
+                r_OutputPrinter.PrintMessage($"Now it is {r_GameEngine.GetNextPlayersName()}'s turn!");
                 handlePlayerMove();
             }
 
@@ -158,7 +157,7 @@ public class GameUI
 
     private void exitGame()
     {
-        Console.WriteLine("Press Enter to exit...");
+        r_OutputPrinter.PrintMessage("Press Enter to exit...");
         Console.ReadLine();
     }
 }

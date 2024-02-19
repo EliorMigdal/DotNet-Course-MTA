@@ -69,6 +69,11 @@ public class OutputPrinter
         }
     }
 
+    public void PrintMessage(string i_Message)
+    {
+        Console.WriteLine($"{i_Message}");
+    }
+
     public void PrintError(string i_Error)
     {
         Console.WriteLine($"Error: {i_Error}");
