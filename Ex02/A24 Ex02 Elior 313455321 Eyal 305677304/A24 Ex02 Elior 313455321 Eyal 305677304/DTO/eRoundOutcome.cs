@@ -1,5 +1,8 @@
-﻿public enum eRoundOutcome
+﻿namespace FourInARow.DTO
 {
-    Draw,
-    Conclusion
+    public enum eRoundOutcome
+    {
+        Draw,
+        Conclusion
+    }
 }

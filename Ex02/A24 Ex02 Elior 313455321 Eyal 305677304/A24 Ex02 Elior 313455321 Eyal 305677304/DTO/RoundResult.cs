@@ -1,5 +1,8 @@
-﻿public class RoundResult
+﻿namespace FourInARow.DTO
 {
-    public eRoundOutcome RoundOutcome { get; set; }
-    public string RoundWinner { get; set; }
+    public class RoundResult
+    {
+        public eRoundOutcome RoundOutcome { get; set; }
+        public string RoundWinner { get; set; }
+    }
 }

@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{E2BC2CCE-7C5E-4F9F-86F7-19DB1B45DEC6}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>GarageLogic</RootNamespace>
+    <AssemblyName>GarageLogic</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DTO\Types\CarForm.cs" />
+    <Compile Include="DTO\Types\MotorCycleForm.cs" />
+    <Compile Include="DTO\Types\TruckForm.cs" />
+    <Compile Include="DTO\VehicleForm.cs" />
+    <Compile Include="DTO\WheelForm.cs" />
+    <Compile Include="Manager\eVehicleStatus.cs" />
+    <Compile Include="Manager\GarageManager.cs" />
+    <Compile Include="Manager\Owner.cs" />
+    <Compile Include="Manager\VehicleRecord.cs" />
+    <Compile Include="Vehicles\Factory\eVehicleType.cs" />
+    <Compile Include="Vehicles\Factory\eWheelsMaxAirPressure.cs" />
+    <Compile Include="Vehicles\Factory\VehicleFactory.cs" />
+    <Compile Include="Vehicles\Types\eFuelType.cs" />
+    <Compile Include="Vehicles\Types\ElectricalVehicle.cs" />
+    <Compile Include="Vehicles\Types\FueledVehicle.cs" />
+    <Compile Include="Vehicles\Types\Objects\Car\CarInfo.cs" />
+    <Compile Include="Vehicles\Types\Objects\Car\eCarColors.cs" />
+    <Compile Include="Vehicles\Types\Objects\Car\eCarDoors.cs" />
+    <Compile Include="Vehicles\Types\Objects\Car\ElectricalCar.cs" />
+    <Compile Include="Vehicles\Types\Objects\Car\FueledCar.cs" />
+    <Compile Include="Vehicles\Types\Objects\MotorCycle\MotorCycleInfo.cs" />
+    <Compile Include="Vehicles\Types\Objects\MotorCycle\eMotorCycleLicense.cs" />
+    <Compile Include="Vehicles\Types\Objects\MotorCycle\ElectricalMotorCycle.cs" />
+    <Compile Include="Vehicles\Types\Objects\MotorCycle\FueledMotorCycle.cs" />
+    <Compile Include="Vehicles\Types\Objects\Truck\Truck.cs" />
+    <Compile Include="Vehicles\Types\Objects\Truck\TruckInfo.cs" />
+    <Compile Include="Vehicles\Vehicle.cs" />
+    <Compile Include="Vehicles\VehicleInfo.cs" />
+    <Compile Include="Vehicles\Wheel.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

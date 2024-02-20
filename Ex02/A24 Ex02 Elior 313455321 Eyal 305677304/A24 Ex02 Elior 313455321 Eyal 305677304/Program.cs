@@ -1,7 +1,12 @@
-﻿public class Program
+﻿using FourInARow.UI;
+
+namespace FourInARow
 {
-    public static void Main()
+    public class Program
     {
-        new GameUI().StartGame();
+        public static void Main()
+        {
+            new GameUI().StartGame();
+        }
     }
 }
