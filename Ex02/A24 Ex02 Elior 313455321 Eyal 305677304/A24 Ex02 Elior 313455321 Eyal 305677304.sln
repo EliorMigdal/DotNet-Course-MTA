@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34511.84
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FourInARow", "A24 Ex02 Elior 313455321 Eyal 305677304\FourInARow.csproj", "{226C9514-B109-4E92-801B-AD7B005FA78E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FourInARow", "FourInARow\FourInARow.csproj", "{226C9514-B109-4E92-801B-AD7B005FA78E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
