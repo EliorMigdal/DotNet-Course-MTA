@@ -1,6 +1,6 @@
 ﻿namespace GarageLogic.Vehicles.Factory
 {
-    internal enum eVehicleType
+    public enum eVehicleType
     {
         FueledMotoryCycle,
         ElectricalMotorCycle,

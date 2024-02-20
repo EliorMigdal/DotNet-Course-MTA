@@ -39,17 +39,12 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DTO\Types\CarForm.cs" />
-    <Compile Include="DTO\Types\MotorCycleForm.cs" />
-    <Compile Include="DTO\Types\TruckForm.cs" />
-    <Compile Include="DTO\VehicleForm.cs" />
-    <Compile Include="DTO\WheelForm.cs" />
+    <Compile Include="Exceptions\ValueOutOfRangeException.cs" />
     <Compile Include="Manager\eVehicleStatus.cs" />
     <Compile Include="Manager\GarageManager.cs" />
     <Compile Include="Manager\Owner.cs" />
     <Compile Include="Manager\VehicleRecord.cs" />
     <Compile Include="Vehicles\Factory\eVehicleType.cs" />
-    <Compile Include="Vehicles\Factory\eWheelsMaxAirPressure.cs" />
     <Compile Include="Vehicles\Factory\VehicleFactory.cs" />
     <Compile Include="Vehicles\Types\eFuelType.cs" />
     <Compile Include="Vehicles\Types\ElectricalVehicle.cs" />
