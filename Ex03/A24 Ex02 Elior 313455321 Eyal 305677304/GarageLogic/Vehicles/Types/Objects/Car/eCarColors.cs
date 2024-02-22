@@ -1,6 +1,6 @@
 ﻿namespace GarageLogic.Vehicles.Types.Objects.Car
 {
-    internal enum eCarColors
+    public enum eCarColors
     {
         Blue,
         White,

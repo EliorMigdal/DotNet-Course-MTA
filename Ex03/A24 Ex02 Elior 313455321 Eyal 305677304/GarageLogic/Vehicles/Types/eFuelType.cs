@@ -1,6 +1,6 @@
 ﻿namespace GarageLogic.Vehicles.Types
 {
-    internal enum eFuelType
+    public enum eFuelType
     {
         Octan95, 
         Octan96, 

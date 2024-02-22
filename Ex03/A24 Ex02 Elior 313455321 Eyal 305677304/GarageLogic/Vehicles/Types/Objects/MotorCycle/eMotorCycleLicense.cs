@@ -1,10 +1,10 @@
 ﻿namespace GarageLogic.Vehicles.Types.Objects.MotorCycle
 {
-    internal enum eMotorCycleLicense
+    public enum eMotorCycleLicense
     {
-        A1,
-        A2,
-        AB,
-        B2
+        A1 = 1,
+        A2 = 2,
+        AB = 3,
+        B = 4
     }
 }

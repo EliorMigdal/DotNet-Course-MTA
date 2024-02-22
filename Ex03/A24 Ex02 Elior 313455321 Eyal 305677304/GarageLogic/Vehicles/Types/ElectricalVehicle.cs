@@ -1,6 +1,6 @@
 ﻿namespace GarageLogic.Vehicles.Types
 {
-    internal abstract class ElectricalVehicle : Vehicle
+    public abstract class ElectricalVehicle : Vehicle
     {
         public float RemainingBatteryTime { get; set; }
         public float MaxBatteryTime { get; set; }

@@ -4,7 +4,7 @@ using GarageLogic.Vehicles.Types.Objects.Truck;
 
 namespace GarageLogic.Vehicles.Factory
 {
-    internal class VehicleFactory
+    public class VehicleFactory
     {
         public Vehicle GenerateVehicle(eVehicleType i_VehicleType)
         {

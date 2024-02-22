@@ -2,9 +2,19 @@
 
 namespace GarageLogic.Vehicles
 {
-    internal abstract class Vehicle
+    public abstract class Vehicle
     {
-        public VehicleInfo VehicleInfo { get; set; }
-        public List<Wheel> Wheels { get; set; } = new List<Wheel>();
+        public VehicleInfo VehicleInfo { get; set; } = new VehicleInfo();
+        public List<Wheel> Wheels { get; set; }
+
+        protected void InstallWheels(int i_NumOfWheels, float i_MaxAirPressure)
+        {
+            Wheels = new List<Wheel>(i_NumOfWheels);
+
+            foreach (Wheel wheel in Wheels)
+            {
+                wheel.MaxAirPressure = i_MaxAirPressure;
+            }
+        }
     }
 }

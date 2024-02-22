@@ -2,7 +2,7 @@
 {
     public enum eVehicleType
     {
-        FueledMotoryCycle,
+        FueledMotoryCycle = 1,
         ElectricalMotorCycle,
         FueledCar,
         ElectricalCar,

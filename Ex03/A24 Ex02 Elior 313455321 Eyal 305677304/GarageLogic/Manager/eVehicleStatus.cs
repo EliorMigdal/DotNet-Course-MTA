@@ -1,6 +1,6 @@
 ﻿namespace GarageLogic.Manager
 {
-    internal enum eVehicleStatus
+    public enum eVehicleStatus
     {
         Fixing,
         Fixed,

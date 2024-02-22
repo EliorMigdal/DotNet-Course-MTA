@@ -1,5 +1,7 @@
 ﻿using ConsoleUI.UI.Enums;
 using GarageLogic.Vehicles.Factory;
+using GarageLogic.Vehicles.Types.Objects.Car;
+using GarageLogic.Vehicles.Types.Objects.MotorCycle;
 using System;
 
 namespace ConsoleUI.UI.Printer
@@ -27,7 +29,7 @@ namespace ConsoleUI.UI.Printer
                 (int)eUserOptions.UpdateVehicleState, (int)eUserOptions.InflateVehicleTires,
                 (int)eUserOptions.FillGas, (int)eUserOptions.ChargeBattery,
                 (int)eUserOptions.DisplayVehicleInfo, (int)eUserOptions.Exit));
-            Console.Write("Enter you action here: ");
+            Console.Write("Enter your action here: ");
         }
 
         public void PrintVehicleOptions()
@@ -42,6 +44,43 @@ namespace ConsoleUI.UI.Printer
                 (int)eVehicleType.FueledMotoryCycle, (int)eVehicleType.ElectricalMotorCycle,
                 (int)eVehicleType.FueledCar, (int)eVehicleType.ElectricalCar,
                 (int)eVehicleType.Truck));
+            Console.Write("Enter your selection here: ");
+        }
+
+        public void PrintSupportedMotorCycleLicenses()
+        {
+            Console.Write("Supported Motorcycle licenses: ");
+
+            foreach (eMotorCycleLicense license in Enum.GetValues(typeof(eMotorCycleLicense)))
+            {
+                Console.Write($"{license} ");
+            }
+
+            Console.WriteLine();
+        }
+
+        public void PrintSupportedCarColors()
+        {
+            Console.Write("Supported Car colors: ");
+
+            foreach (eCarColors color in Enum.GetValues (typeof(eCarColors)))
+            {
+                Console.Write($"{color} ");
+            }
+
+            Console.WriteLine();
+        }
+
+        public void PrintSupportedNumOfCarDoors()
+        {
+            Console.Write("Supported Car doors: ");
+
+            foreach (eCarDoors doorNum in Enum.GetValues(typeof(eCarDoors)))
+            {
+                Console.Write($"{doorNum}");
+            }
+
+            Console.WriteLine();
         }
 
         public void PrintError(string i_Error)

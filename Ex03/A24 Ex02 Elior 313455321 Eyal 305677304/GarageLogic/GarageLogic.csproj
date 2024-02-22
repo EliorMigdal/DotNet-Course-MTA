@@ -44,6 +44,8 @@
     <Compile Include="Manager\GarageManager.cs" />
     <Compile Include="Manager\Owner.cs" />
     <Compile Include="Manager\VehicleRecord.cs" />
+    <Compile Include="Vehicles\eMaxWheelAirPressure.cs" />
+    <Compile Include="Vehicles\eNumOfWheels.cs" />
     <Compile Include="Vehicles\Factory\eVehicleType.cs" />
     <Compile Include="Vehicles\Factory\VehicleFactory.cs" />
     <Compile Include="Vehicles\Types\eFuelType.cs" />
