@@ -9,6 +9,8 @@ using GarageLogic.Manager;
 using GarageLogic.Vehicles.Types.Objects.MotorCycle;
 using GarageLogic.Vehicles.Types.Objects.Car;
 using GarageLogic.Vehicles.Types.Objects.Truck;
+using GarageLogic.Vehicles.Types;
+using System.Collections.Generic;
 
 namespace ConsoleUI.UI
 {
@@ -52,41 +54,56 @@ namespace ConsoleUI.UI
 
         public void ExecuteUserAction(eUserOptions i_UserChoice)
         {
-            switch (i_UserChoice)
+            bool successfullyExecuted = false;
+
+            while (!successfullyExecuted)
             {
-                case eUserOptions.InsertVehicle:
-                    insertNewVehicle();
-                    break;
+                try
+                {
+                    switch (i_UserChoice)
+                    {
+                        case eUserOptions.InsertVehicle:
+                            insertNewVehicle();
+                            break;
 
-                case eUserOptions.DisplayLicenses:
-                    displayLicenses();
-                    break;
+                        case eUserOptions.DisplayLicenses:
+                            displayLicenses();
+                            break;
 
-                case eUserOptions.UpdateVehicleState:
-                    updateVehicleState();
-                    break;
+                        case eUserOptions.UpdateVehicleState:
+                            updateVehicleState();
+                            break;
 
-                case eUserOptions.InflateVehicleTires:
-                    inflateVehicleTires();
-                    break;
+                        case eUserOptions.InflateVehicleTires:
+                            inflateVehicleTires();
+                            break;
 
-                case eUserOptions.FillGas:
-                    fillGas();
-                    break;
+                        case eUserOptions.FillGas:
+                            fillGas();
+                            break;
 
-                case eUserOptions.ChargeBattery:
-                    chargeBattery();
-                    break;
+                        case eUserOptions.ChargeBattery:
+                            chargeBattery();
+                            break;
 
-                case eUserOptions.DisplayVehicleInfo:
-                    displayVehicleInfo();
-                    break;
+                        case eUserOptions.DisplayVehicleInfo:
+                            displayVehicleInfo();
+                            break;
 
-                case eUserOptions.Exit:
-                    break;
+                        case eUserOptions.Exit:
+                            break;
 
-                default:
-                    break;
+                        default:
+                            break;
+                    }
+
+                    successfullyExecuted = true;
+                }
+
+                catch (Exception e)
+                {
+                    r_OutputPrinter.PrintError($"{e.Message}");
+                }
             }
         }
 
@@ -301,12 +318,18 @@ namespace ConsoleUI.UI
         {
             if (i_MotorCycle is FueledMotorCycle)
             {
-                (i_MotorCycle as FueledMotorCycle).MotorCycleInfo = i_MotorCycleInfo;
+                FueledMotorCycle fueledMotorCycle = i_MotorCycle as FueledMotorCycle;
+
+                fueledMotorCycle.MotorCycleInfo = i_MotorCycleInfo;
+                handleFuelData(fueledMotorCycle);
             }
 
             else
             {
-                (i_MotorCycle as ElectricalMotorCycle).MotorCycleInfo = i_MotorCycleInfo;
+                ElectricalMotorCycle electricalMotorCycle = i_MotorCycle as ElectricalMotorCycle;
+
+                electricalMotorCycle.MotorCycleInfo = i_MotorCycleInfo;
+                handleBatteryData(electricalMotorCycle);
             }
         }
 
@@ -341,22 +364,30 @@ namespace ConsoleUI.UI
         {
             if (i_Car is FueledCar)
             {
-                (i_Car as FueledCar).CarInfo = i_CarInfo;
+                FueledCar fueledCar = i_Car as FueledCar;
+
+                fueledCar.CarInfo = i_CarInfo;
+                handleFuelData(fueledCar);
             }
 
             else
             {
-                (i_Car as ElectricalCar).CarInfo = i_CarInfo;
+                ElectricalCar electricalCar = i_Car as ElectricalCar;
+
+                electricalCar.CarInfo = i_CarInfo;
+                handleBatteryData(electricalCar);
             }
         }
 
         private void readTruckData(Vehicle i_Truck)
         {
             TruckInfo truckInfo = new TruckInfo();
+            Truck truck = i_Truck as Truck;
 
             truckInfo.HasDangerousLuggage = readDangerousLuggageData();
             truckInfo.LuggageCapacity = readLuggageCapacity();
-            (i_Truck as Truck).TruckInfo = truckInfo;
+            truck.TruckInfo = truckInfo;
+            handleFuelData(truck);
         }
 
         private bool readDangerousLuggageData()
@@ -375,23 +406,50 @@ namespace ConsoleUI.UI
             return luggageCapacity;
         }
 
+        private void handleFuelData(FueledVehicle i_FueledVehicle)
+        {
+            i_FueledVehicle.RemainingFuel = (i_FueledVehicle.MaxFuelCapacity * 
+                i_FueledVehicle.VehicleInfo.RemainingEnergyPercentage) / 100;
+        }
+
+        private void handleBatteryData(ElectricalVehicle i_ElectricalVehicle)
+        {
+            i_ElectricalVehicle.RemainingBatteryTime = (i_ElectricalVehicle.MaxBatteryTime *
+                i_ElectricalVehicle.VehicleInfo.RemainingEnergyPercentage) / 100;
+        }
+
         private void displayLicenses()
         {
-
+            r_OutputPrinter.PrintVehicleStatuses();
+            string vehicleStatus = r_InputReader.ReadVehicleStatus();
+            List<string> licenses = r_GarageManager.FilterLicensePlatesByStatus(vehicleStatus);
+            r_OutputPrinter.PrintLicensePlates(vehicleStatus, licenses);
         }
 
         private void updateVehicleState()
         {
+            string licensePlate = r_InputReader.ReadLicensePlate();
+            string newState = r_InputReader.ReadNewVehicleState();
+            string oldState = r_GarageManager.UpdateVehicleState(licensePlate, newState);
 
+            Console.WriteLine($"Successfully updated vehicle licensed {licensePlate}'s state from {oldState} to {newState}!");
         }
 
         private void inflateVehicleTires()
         {
+            string licensePlate = r_InputReader.ReadLicensePlate();
 
+            r_GarageManager.InflateVehicleTiresToMaximum(licensePlate);
+            Console.WriteLine($"Successfully inflated vehicle licensed {licensePlate}'s wheels!");
         }
 
         private void fillGas()
         {
+            string licensePlate = r_InputReader.ReadLicensePlate(), fuelType, fuelAmount;
+
+            r_OutputPrinter.PrintFuelTypes();
+            fuelType = r_InputReader.ReadFuelType();
+            fuelAmount = r_InputReader.ReadFuelAmoint();
 
         }
 

@@ -86,5 +86,29 @@ namespace ConsoleUI.UI.Reader
             Console.Write("Please enter vehicle's owner phone number: ");
             return Console.ReadLine();
         }
+
+        public string ReadVehicleStatus()
+        {
+            Console.Write("Please enter vehicle's status (or enter 'All'): ");
+            return Console.ReadLine();
+        }
+
+        public string ReadNewVehicleState()
+        {
+            Console.Write("Please enter vehicle's new state: ");
+            return Console.ReadLine();
+        }
+
+        public string ReadFuelType()
+        {
+            Console.Write("Please enter the type of fuel you would like to fill: ");
+            return Console.ReadLine();
+        }
+
+        public string ReadFuelAmoint()
+        {
+            Console.Write("Please enter the amount of fuel you would like to fill: ");
+            return Console.ReadLine();
+        }
     }
 }

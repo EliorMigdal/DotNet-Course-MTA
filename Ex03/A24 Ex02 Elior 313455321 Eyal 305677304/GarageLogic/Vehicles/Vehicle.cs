@@ -16,5 +16,13 @@ namespace GarageLogic.Vehicles
                 wheel.MaxAirPressure = i_MaxAirPressure;
             }
         }
+
+        public void InflateTiresToMaximum()
+        {
+            foreach (Wheel wheel in Wheels)
+            {
+                wheel.CurrentAirPressure = wheel.MaxAirPressure;
+            }
+        }
     }
 }

@@ -67,7 +67,7 @@ namespace ConsoleUI.UI.Verifier
 
         public void VerifyCarColorInput(string i_Input, out eCarColors o_CarColor)
         {
-            bool parsable = Enum.TryParse(i_Input,false, out o_CarColor);
+            bool parsable = Enum.TryParse(i_Input, false, out o_CarColor);
 
             if (!parsable)
             {
@@ -99,6 +99,11 @@ namespace ConsoleUI.UI.Verifier
         public void VerifyLuggageCapacity(string i_Input, out float o_LuggageCapacity)
         {
             tryParsingToFloat(i_Input, out o_LuggageCapacity);
+        }
+
+        public void VerifyFuelAmount(string i_Input, out float o_FuelAmount)
+        {
+            tryParsingToFloat(i_Input,out o_FuelAmount);
         }
 
         private void tryParsingToInt(string i_Input, out int o_Parsed)

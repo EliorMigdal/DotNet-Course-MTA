@@ -1,8 +1,11 @@
 ﻿using ConsoleUI.UI.Enums;
+using GarageLogic.Manager;
 using GarageLogic.Vehicles.Factory;
+using GarageLogic.Vehicles.Types;
 using GarageLogic.Vehicles.Types.Objects.Car;
 using GarageLogic.Vehicles.Types.Objects.MotorCycle;
 using System;
+using System.Collections.Generic;
 
 namespace ConsoleUI.UI.Printer
 {
@@ -49,38 +52,62 @@ namespace ConsoleUI.UI.Printer
 
         public void PrintSupportedMotorCycleLicenses()
         {
-            Console.Write("Supported Motorcycle licenses: ");
+            Console.WriteLine("Supported Motorcycle licenses: ");
 
             foreach (eMotorCycleLicense license in Enum.GetValues(typeof(eMotorCycleLicense)))
             {
-                Console.Write($"{license} ");
+                Console.WriteLine($"-  {license}");
             }
-
-            Console.WriteLine();
         }
 
         public void PrintSupportedCarColors()
         {
-            Console.Write("Supported Car colors: ");
+            Console.WriteLine("Supported Car colors: ");
 
             foreach (eCarColors color in Enum.GetValues (typeof(eCarColors)))
             {
-                Console.Write($"{color} ");
+                Console.WriteLine($"- {color}");
             }
-
-            Console.WriteLine();
         }
 
         public void PrintSupportedNumOfCarDoors()
         {
-            Console.Write("Supported Car doors: ");
+            Console.WriteLine("Supported Car doors: ");
 
             foreach (eCarDoors doorNum in Enum.GetValues(typeof(eCarDoors)))
             {
-                Console.Write($"{doorNum}");
+                Console.WriteLine($"- {doorNum}");
             }
+        }
 
-            Console.WriteLine();
+        public void PrintVehicleStatuses()
+        {
+            Console.Write("Available vehicle statuses: ");
+
+            foreach (eVehicleStatus status in Enum.GetValues(typeof(eVehicleStatus)))
+            {
+                Console.WriteLine($"- {status}");
+            }
+        }
+
+        public void PrintLicensePlates(string i_VehicleStatus, List<String> i_Licenses)
+        {
+            Console.WriteLine($"List of {i_VehicleStatus.ToLower()} vehicles's license plates:");
+
+            foreach (string license in i_Licenses)
+            {
+                Console.WriteLine(license);
+            }
+        }
+
+        public void PrintFuelTypes()
+        {
+            Console.WriteLine("List of available fuel types:");
+
+            foreach (eFuelType fuelType in Enum.GetValues(typeof(eFuelType)))
+            {
+                Console.WriteLine($"- {fuelType}");
+            }
         }
 
         public void PrintError(string i_Error)
