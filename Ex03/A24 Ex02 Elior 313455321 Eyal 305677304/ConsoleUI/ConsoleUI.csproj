@@ -48,7 +48,7 @@
     <Compile Include="UI\GarageUI.cs" />
     <Compile Include="UI\Printer\OutputPrinter.cs" />
     <Compile Include="UI\Reader\InputReader.cs" />
-    <Compile Include="UI\Verifier\InputVerifier.cs" />
+    <Compile Include="UI\Validator\InputValidator.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -3,6 +3,7 @@ using GarageLogic.Vehicles.Types;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace GarageLogic.Manager
 {
@@ -57,7 +58,7 @@ namespace GarageLogic.Manager
             vehicle.InflateTiresToMaximum();
         }
 
-        public void FillGas(string i_LicensePlate, string i_FuelType, float i_FuelAmount)
+        public float FillGas(string i_LicensePlate, string i_FuelType, float i_FuelAmount)
         {
             Vehicle vehicle = findVehicle(i_LicensePlate);
 
@@ -69,6 +70,35 @@ namespace GarageLogic.Manager
             FueledVehicle fueledVehicle = vehicle as FueledVehicle;
             validateFuelType(i_FuelType, out eFuelType fuelType);
             fueledVehicle.AddFuel(i_FuelAmount, fuelType);
+
+            return fueledVehicle.RemainingFuel;
+        }
+
+        public float ChargeBattery(string i_LicensePlate, float i_ChargingTime)
+        {
+            Vehicle vehicle = findVehicle(i_LicensePlate);
+
+            if (vehicle is FueledVehicle)
+            {
+                throw new ArgumentException($"Vehicle licensed {i_LicensePlate} is fueled!");
+            }
+
+            ElectricalVehicle electricalVehicle = vehicle as ElectricalVehicle;
+            electricalVehicle.ChargeBattery(i_ChargingTime / 60f);
+
+            return electricalVehicle.RemainingBatteryTime;
+        }
+
+        public string GetVehicleInfo(string i_LicensePlate)
+        {
+            StringBuilder vehicleInfo = new StringBuilder();
+            Vehicle vehicle;
+
+            vehicle = findVehicle(i_LicensePlate);
+            vehicleInfo.AppendLine(r_VehicleRecords[i_LicensePlate].ToString());
+            vehicleInfo.AppendLine(vehicle.ToString());
+
+            return vehicleInfo.ToString();
         }
 
         private bool isStatusValid(string i_Status, out eVehicleStatus o_VehicleStatus)
@@ -96,7 +126,7 @@ namespace GarageLogic.Manager
         {
             if (!IsVehicleInGarage(i_LicensePlate))
             {
-                throw new ArgumentException($"Vehicle licenses {i_LicensePlate} doesn't exist in our garage!");
+                throw new ArgumentException($"Vehicle licensed {i_LicensePlate} doesn't exist in our garage!");
             }
         }
 

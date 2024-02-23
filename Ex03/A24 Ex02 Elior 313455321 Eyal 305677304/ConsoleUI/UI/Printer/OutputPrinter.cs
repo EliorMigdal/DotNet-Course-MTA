@@ -20,7 +20,7 @@ namespace ConsoleUI.UI.Printer
         {
             Console.WriteLine("Please choose your desired action:");
             Console.WriteLine(string.Format(
-                "{0} - Add a new vehicle to the garge\n" +
+                "{0} - Add a new vehicle to the garage\n" +
                 "{1} - Display license plates\n" +
                 "{2} - Update existing vehicle's state\n" +
                 "{3} - Inflate vehicle's tires\n" +
@@ -39,7 +39,7 @@ namespace ConsoleUI.UI.Printer
         {
             Console.WriteLine("Please choose vehicle type:");
             Console.WriteLine(string.Format(
-                "{0} - Fueled Motortcycle\n" +
+                "{0} - Fueled Motorcycle\n" +
                 "{1} - Electrical Motorcycle\n" +
                 "{2} - Fueled Car\n" +
                 "{3} - Electrical Car\n" +
@@ -76,13 +76,13 @@ namespace ConsoleUI.UI.Printer
 
             foreach (eCarDoors doorNum in Enum.GetValues(typeof(eCarDoors)))
             {
-                Console.WriteLine($"- {doorNum}");
+                Console.WriteLine($"- {(int)doorNum}");
             }
         }
 
         public void PrintVehicleStatuses()
         {
-            Console.Write("Available vehicle statuses: ");
+            Console.WriteLine("Available vehicle statuses: ");
 
             foreach (eVehicleStatus status in Enum.GetValues(typeof(eVehicleStatus)))
             {
@@ -90,13 +90,21 @@ namespace ConsoleUI.UI.Printer
             }
         }
 
-        public void PrintLicensePlates(string i_VehicleStatus, List<String> i_Licenses)
+        public void PrintLicensePlates(string i_VehicleStatus, List<string> i_Licenses)
         {
-            Console.WriteLine($"List of {i_VehicleStatus.ToLower()} vehicles's license plates:");
-
-            foreach (string license in i_Licenses)
+            if (i_Licenses.Count == 0)
             {
-                Console.WriteLine(license);
+                Console.WriteLine($"There are no vehicles under status {i_VehicleStatus.ToLower()}.");
+            }
+
+            else
+            {
+                Console.WriteLine($"List of {i_VehicleStatus.ToLower()} vehicles's license plates:");
+
+                foreach (string license in i_Licenses)
+                {
+                    Console.WriteLine(license);
+                }
             }
         }
 

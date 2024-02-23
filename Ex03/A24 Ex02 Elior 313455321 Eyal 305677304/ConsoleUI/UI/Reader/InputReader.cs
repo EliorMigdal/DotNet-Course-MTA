@@ -105,9 +105,15 @@ namespace ConsoleUI.UI.Reader
             return Console.ReadLine();
         }
 
-        public string ReadFuelAmoint()
+        public string ReadFuelAmount()
         {
-            Console.Write("Please enter the amount of fuel you would like to fill: ");
+            Console.Write("Please enter the amount of fuel (In Litres) you would like to fill: ");
+            return Console.ReadLine();
+        }
+
+        public string ReadBatteryAmount()
+        {
+            Console.Write("Please enter the number of minutes you would like to charge the vehicle: ");
             return Console.ReadLine();
         }
     }

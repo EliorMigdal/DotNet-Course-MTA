@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Text;
 
 namespace GarageLogic.Vehicles
 {
@@ -11,9 +12,11 @@ namespace GarageLogic.Vehicles
         {
             Wheels = new List<Wheel>(i_NumOfWheels);
 
-            foreach (Wheel wheel in Wheels)
+            for (int i = 0; i < i_NumOfWheels; i++)
             {
+                Wheel wheel = new Wheel();
                 wheel.MaxAirPressure = i_MaxAirPressure;
+                Wheels.Add(wheel);
             }
         }
 
@@ -23,6 +26,22 @@ namespace GarageLogic.Vehicles
             {
                 wheel.CurrentAirPressure = wheel.MaxAirPressure;
             }
+        }
+
+        public override string ToString()
+        {
+            StringBuilder vehicleData = new StringBuilder();
+
+            vehicleData.AppendLine(VehicleInfo.ToString());
+            vehicleData.AppendLine("Vehicle's wheels information:");
+
+            foreach (Wheel wheel in Wheels)
+            {
+                vehicleData.AppendLine($"Wheel #{Wheels.IndexOf(wheel) + 1}:");
+                vehicleData.AppendLine(wheel.ToString());
+            }
+
+            return vehicleData.ToString();
         }
     }
 }

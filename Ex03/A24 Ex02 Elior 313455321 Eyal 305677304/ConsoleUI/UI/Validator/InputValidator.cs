@@ -7,9 +7,9 @@ using GarageLogic.Vehicles.Types.Objects.Car;
 using GarageLogic.Vehicles.Types.Objects.MotorCycle;
 using System;
 
-namespace ConsoleUI.UI.Verifier
+namespace ConsoleUI.UI.Validator
 {
-    internal class InputVerifier
+    internal class InputValidator
     {
         public void VerifyActionChoice(string i_Input, out eUserOptions o_Choice)
         {
@@ -104,6 +104,11 @@ namespace ConsoleUI.UI.Verifier
         public void VerifyFuelAmount(string i_Input, out float o_FuelAmount)
         {
             tryParsingToFloat(i_Input,out o_FuelAmount);
+        }
+
+        public void ValidateChargingTime(string i_Input, out float o_NumOfMinutes)
+        {
+            tryParsingToFloat(i_Input, out o_NumOfMinutes);
         }
 
         private void tryParsingToInt(string i_Input, out int o_Parsed)

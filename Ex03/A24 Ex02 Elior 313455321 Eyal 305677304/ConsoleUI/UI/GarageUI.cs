@@ -1,7 +1,7 @@
 ﻿using ConsoleUI.UI.Enums;
 using ConsoleUI.UI.Printer;
 using ConsoleUI.UI.Reader;
-using ConsoleUI.UI.Verifier;
+using ConsoleUI.UI.Validator;
 using GarageLogic.Vehicles.Factory;
 using GarageLogic.Vehicles;
 using System;
@@ -18,7 +18,7 @@ namespace ConsoleUI.UI
     {
         private readonly OutputPrinter r_OutputPrinter = new OutputPrinter();
         private readonly InputReader r_InputReader = new InputReader();
-        private readonly InputVerifier r_Verifier = new InputVerifier();
+        private readonly InputValidator r_InputValidator = new InputValidator();
         private readonly VehicleFactory r_VehicleFactory = new VehicleFactory();
         private readonly GarageManager r_GarageManager = new GarageManager();
 
@@ -34,7 +34,7 @@ namespace ConsoleUI.UI
                 try
                 {
                     userInput = handleActionChoice();
-                    r_Verifier.VerifyActionChoice(userInput, out eUserOptions userChoice);
+                    r_InputValidator.VerifyActionChoice(userInput, out eUserOptions userChoice);
                     ExecuteUserAction(userChoice);
                     hasUserExited = userChoice.Equals(eUserOptions.Exit);
                 }
@@ -54,56 +54,41 @@ namespace ConsoleUI.UI
 
         public void ExecuteUserAction(eUserOptions i_UserChoice)
         {
-            bool successfullyExecuted = false;
-
-            while (!successfullyExecuted)
+            switch (i_UserChoice)
             {
-                try
-                {
-                    switch (i_UserChoice)
-                    {
-                        case eUserOptions.InsertVehicle:
-                            insertNewVehicle();
-                            break;
+                case eUserOptions.InsertVehicle:
+                    insertNewVehicle();
+                    break;
 
-                        case eUserOptions.DisplayLicenses:
-                            displayLicenses();
-                            break;
+                case eUserOptions.DisplayLicenses:
+                    displayLicenses();
+                    break;
 
-                        case eUserOptions.UpdateVehicleState:
-                            updateVehicleState();
-                            break;
+                case eUserOptions.UpdateVehicleState:
+                    updateVehicleState();
+                    break;
 
-                        case eUserOptions.InflateVehicleTires:
-                            inflateVehicleTires();
-                            break;
+                case eUserOptions.InflateVehicleTires:
+                    inflateVehicleTires();
+                    break;
 
-                        case eUserOptions.FillGas:
-                            fillGas();
-                            break;
+                case eUserOptions.FillGas:
+                    fillGas();
+                    break;
 
-                        case eUserOptions.ChargeBattery:
-                            chargeBattery();
-                            break;
+                case eUserOptions.ChargeBattery:
+                    chargeBattery();
+                    break;
 
-                        case eUserOptions.DisplayVehicleInfo:
-                            displayVehicleInfo();
-                            break;
+                case eUserOptions.DisplayVehicleInfo:
+                    displayVehicleInfo();
+                    break;
 
-                        case eUserOptions.Exit:
-                            break;
+                case eUserOptions.Exit:
+                    break;
 
-                        default:
-                            break;
-                    }
-
-                    successfullyExecuted = true;
-                }
-
-                catch (Exception e)
-                {
-                    r_OutputPrinter.PrintError($"{e.Message}");
-                }
+                default:
+                    break;
             }
         }
 
@@ -143,7 +128,7 @@ namespace ConsoleUI.UI
         {
             r_OutputPrinter.PrintVehicleOptions();
             string userInput = r_InputReader.ReadUserChoice();
-            r_Verifier.VerifyVehicleTypeChoice(userInput, out eVehicleType userChoice);
+            r_InputValidator.VerifyVehicleTypeChoice(userInput, out eVehicleType userChoice);
 
             return userChoice;
         }
@@ -178,7 +163,7 @@ namespace ConsoleUI.UI
                 try
                 {
                     readVehicleData(out string modelInput, out string licenseInput, out string energyInput);
-                    r_Verifier.VerifyEnergyPercentageInput(energyInput, out float energyPercentage);
+                    r_InputValidator.VerifyEnergyPercentageInput(energyInput, out float energyPercentage);
                     insertVehicleInfo(i_Vehicle, modelInput, licenseInput, energyPercentage);
                     successfullyRead = true;
                 }
@@ -199,7 +184,7 @@ namespace ConsoleUI.UI
                 try
                 {
                     readWheelData(out string manufacturorName, out string airPressureInput);
-                    r_Verifier.VerifyAirPressureInput(airPressureInput, out float airPressure, i_VehicleType);
+                    r_InputValidator.VerifyAirPressureInput(airPressureInput, out float airPressure, i_VehicleType);
                     insertWheelInfo(i_Vehicle, manufacturorName, airPressure);
                     successfullyRead = true;
                 }
@@ -299,17 +284,21 @@ namespace ConsoleUI.UI
 
         private eMotorCycleLicense readMotorCycleLicense()
         {
+            string licenseInput;
+
             r_OutputPrinter.PrintSupportedMotorCycleLicenses();
-            string licenseInput = r_InputReader.ReadMotorCycleLicense();
-            r_Verifier.VerifyMotorCycleLicenseInput(licenseInput, out eMotorCycleLicense motorCycleLicense);
+            licenseInput = r_InputReader.ReadMotorCycleLicense();
+            r_InputValidator.VerifyMotorCycleLicenseInput(licenseInput, out eMotorCycleLicense motorCycleLicense);
 
             return motorCycleLicense;
         }
 
         private int readMotorCycleEngineVolume()
         {
-            string engineVolumeInput = r_InputReader.ReadMotorCycleEngineVolume();
-            r_Verifier.VerifyMotorCycleEngineInput(engineVolumeInput, out int engineVolume);
+            string engineVolumeInput;
+
+            engineVolumeInput = r_InputReader.ReadMotorCycleEngineVolume();
+            r_InputValidator.VerifyMotorCycleEngineInput(engineVolumeInput, out int engineVolume);
 
             return engineVolume;
         }
@@ -344,18 +333,22 @@ namespace ConsoleUI.UI
 
         private eCarColors readCarColor()
         {
+            string colorInput;
+
             r_OutputPrinter.PrintSupportedCarColors();
-            string colorInput = r_InputReader.ReadCarColor();
-            r_Verifier.VerifyCarColorInput(colorInput, out eCarColors carColor);
+            colorInput = r_InputReader.ReadCarColor();
+            r_InputValidator.VerifyCarColorInput(colorInput, out eCarColors carColor);
 
             return carColor;
         }
 
         private eCarDoors readCarNumOfDoors()
         {
+            string doorsInput;
+
             r_OutputPrinter.PrintSupportedNumOfCarDoors();
-            string doorsInput = r_InputReader.ReadNumOfCarDoors();
-            r_Verifier.VerifyNumOfCarDoorsInput(doorsInput, out eCarDoors carDoors);
+            doorsInput = r_InputReader.ReadNumOfCarDoors();
+            r_InputValidator.VerifyNumOfCarDoorsInput(doorsInput, out eCarDoors carDoors);
 
             return carDoors;
         }
@@ -392,16 +385,20 @@ namespace ConsoleUI.UI
 
         private bool readDangerousLuggageData()
         {
-            string dangerousLuggageInput = r_InputReader.ReadDangerousLuggageInfo();
-            r_Verifier.VerifyDangerousLuggageInput(dangerousLuggageInput, out bool hasDangerousLuggage);
+            string dangerousLuggageInput;
+
+            dangerousLuggageInput = r_InputReader.ReadDangerousLuggageInfo();
+            r_InputValidator.VerifyDangerousLuggageInput(dangerousLuggageInput, out bool hasDangerousLuggage);
 
             return hasDangerousLuggage;
         }
 
         private float readLuggageCapacity()
         {
-            string luggageCapacityInput = r_InputReader.ReadLuggageCapacity();
-            r_Verifier.VerifyLuggageCapacity(luggageCapacityInput, out float luggageCapacity);
+            string luggageCapacityInput;
+
+            luggageCapacityInput = r_InputReader.ReadLuggageCapacity();
+            r_InputValidator.VerifyLuggageCapacity(luggageCapacityInput, out float luggageCapacity);
 
             return luggageCapacity;
         }
@@ -420,9 +417,12 @@ namespace ConsoleUI.UI
 
         private void displayLicenses()
         {
+            string vehicleStatus;
+            List<string> licenses;
+
             r_OutputPrinter.PrintVehicleStatuses();
-            string vehicleStatus = r_InputReader.ReadVehicleStatus();
-            List<string> licenses = r_GarageManager.FilterLicensePlatesByStatus(vehicleStatus);
+            vehicleStatus = r_InputReader.ReadVehicleStatus();
+            licenses = r_GarageManager.FilterLicensePlatesByStatus(vehicleStatus);
             r_OutputPrinter.PrintLicensePlates(vehicleStatus, licenses);
         }
 
@@ -445,22 +445,40 @@ namespace ConsoleUI.UI
 
         private void fillGas()
         {
-            string licensePlate = r_InputReader.ReadLicensePlate(), fuelType, fuelAmount;
-
+            string licensePlate, fuelType, fuelAmountInput;
+            float fuelAmount, newAmount;
+            
+            licensePlate = r_InputReader.ReadLicensePlate();
             r_OutputPrinter.PrintFuelTypes();
             fuelType = r_InputReader.ReadFuelType();
-            fuelAmount = r_InputReader.ReadFuelAmoint();
-
+            fuelAmountInput = r_InputReader.ReadFuelAmount();
+            r_InputValidator.VerifyFuelAmount(fuelAmountInput, out fuelAmount);
+            newAmount = r_GarageManager.FillGas(licensePlate, fuelType, fuelAmount);
+            Console.WriteLine($"Successfully filled {fuelAmount} litres of gas in vehicile " +
+                $"licensed {licensePlate}. New amount: {newAmount}L");
         }
 
         private void chargeBattery()
         {
+            string licensePlate, chargingTimeInput;
+            float chargingTime, newAmount;
+
+            licensePlate = r_InputReader.ReadLicensePlate();
+            chargingTimeInput = r_InputReader.ReadBatteryAmount();
+            r_InputValidator.ValidateChargingTime(chargingTimeInput, out chargingTime);
+            newAmount = r_GarageManager.ChargeBattery(licensePlate, chargingTime);
+            Console.WriteLine($"Successfully charged {chargingTime / 60f:F2} hours of battery in vehicle " +
+                $"licensed {licensePlate}. New amount: {newAmount:F2}H");
 
         }
 
         private void displayVehicleInfo()
         {
+            string licensePlate, vehicleInfo;
 
+            licensePlate = r_InputReader.ReadLicensePlate();
+            vehicleInfo = r_GarageManager.GetVehicleInfo(licensePlate);
+            Console.Write(vehicleInfo);
         }
     }
 }
