@@ -44,7 +44,6 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="UI\Enums\eUserOptions.cs" />
-    <Compile Include="UI\Exceptions\ChoiceOutOfRange.cs" />
     <Compile Include="UI\GarageUI.cs" />
     <Compile Include="UI\Printer\OutputPrinter.cs" />
     <Compile Include="UI\Reader\InputReader.cs" />

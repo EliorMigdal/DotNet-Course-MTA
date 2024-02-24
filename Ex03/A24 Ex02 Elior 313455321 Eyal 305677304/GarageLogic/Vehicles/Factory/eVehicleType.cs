@@ -1,6 +1,6 @@
 ﻿namespace GarageLogic.Vehicles.Factory
 {
-    public enum eVehicleType
+    public enum eVehicleType : uint
     {
         FueledMotoryCycle = 1,
         ElectricalMotorCycle,

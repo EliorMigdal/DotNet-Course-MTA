@@ -1,8 +1,8 @@
 ﻿namespace GarageLogic.Manager
 {
-    public enum eVehicleStatus
+    public enum eVehicleStatus : uint
     {
-        Fixing,
+        Fixing = 1,
         Fixed,
         Paid
     }

@@ -1,6 +1,7 @@
 ﻿using GarageLogic.Vehicles.Types.Objects.Car;
 using GarageLogic.Vehicles.Types.Objects.MotorCycle;
 using GarageLogic.Vehicles.Types.Objects.Truck;
+using System;
 
 namespace GarageLogic.Vehicles.Factory
 {
@@ -38,6 +39,23 @@ namespace GarageLogic.Vehicles.Factory
             }
 
             return generatedVehicle;
+        }
+
+        public static eVehicleType ValidateVehicleType(uint i_VehicleType)
+        {
+            eVehicleType vehicleType;
+
+            if (!Enum.IsDefined(typeof(eVehicleType), i_VehicleType))
+            {
+                throw new ArgumentException("Invalid vehicle choice!");
+            }
+
+            else
+            {
+                vehicleType = (eVehicleType)i_VehicleType;
+            }
+
+            return vehicleType;
         }
     }
 }

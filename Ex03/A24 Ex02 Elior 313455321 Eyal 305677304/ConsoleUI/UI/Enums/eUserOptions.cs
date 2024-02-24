@@ -1,6 +1,6 @@
 ﻿namespace ConsoleUI.UI.Enums
 {
-    internal enum eUserOptions
+    public enum eUserOptions : uint
     {
         InsertVehicle = 1,
         DisplayLicenses = 2,

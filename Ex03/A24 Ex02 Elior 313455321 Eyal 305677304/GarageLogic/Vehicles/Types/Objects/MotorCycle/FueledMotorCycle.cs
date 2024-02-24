@@ -17,8 +17,8 @@ namespace GarageLogic.Vehicles.Types.Objects.MotorCycle
         {
             StringBuilder stringBuilder = new StringBuilder();
 
-            stringBuilder.AppendLine(base.ToString());
-            stringBuilder.AppendLine(MotorCycleInfo.ToString());
+            stringBuilder.Append(base.ToString());
+            stringBuilder.Append(MotorCycleInfo.ToString());
 
             return stringBuilder.ToString();
         }

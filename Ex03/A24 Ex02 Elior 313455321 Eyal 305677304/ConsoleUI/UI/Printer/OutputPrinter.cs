@@ -32,7 +32,6 @@ namespace ConsoleUI.UI.Printer
                 (int)eUserOptions.UpdateVehicleState, (int)eUserOptions.InflateVehicleTires,
                 (int)eUserOptions.FillGas, (int)eUserOptions.ChargeBattery,
                 (int)eUserOptions.DisplayVehicleInfo, (int)eUserOptions.Exit));
-            Console.Write("Enter your action here: ");
         }
 
         public void PrintVehicleOptions()
@@ -47,7 +46,6 @@ namespace ConsoleUI.UI.Printer
                 (int)eVehicleType.FueledMotoryCycle, (int)eVehicleType.ElectricalMotorCycle,
                 (int)eVehicleType.FueledCar, (int)eVehicleType.ElectricalCar,
                 (int)eVehicleType.Truck));
-            Console.Write("Enter your selection here: ");
         }
 
         public void PrintSupportedMotorCycleLicenses()
@@ -64,7 +62,7 @@ namespace ConsoleUI.UI.Printer
         {
             Console.WriteLine("Supported Car colors: ");
 
-            foreach (eCarColors color in Enum.GetValues (typeof(eCarColors)))
+            foreach (eCarColors color in Enum.GetValues(typeof(eCarColors)))
             {
                 Console.WriteLine($"- {color}");
             }
@@ -120,7 +118,7 @@ namespace ConsoleUI.UI.Printer
 
         public void PrintError(string i_Error)
         {
-            Console.WriteLine($"Error: {i_Error}");
+            Console.WriteLine($"Error: {i_Error}\n");
         }
     }
 }

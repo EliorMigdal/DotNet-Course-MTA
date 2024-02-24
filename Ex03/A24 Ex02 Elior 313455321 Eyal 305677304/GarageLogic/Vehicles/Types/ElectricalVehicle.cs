@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GarageLogic.Exceptions;
+using System;
 using System.Text;
 
 namespace GarageLogic.Vehicles.Types
@@ -23,8 +24,7 @@ namespace GarageLogic.Vehicles.Types
 
             else if (i_ChargingTime + RemainingBatteryTime > MaxBatteryTime)
             {
-                throw new ArgumentException($"Denied: Vehicle licensed {VehicleInfo.LicenseID} has already {RemainingBatteryTime} hours " +
-                    $"of battery.\nCharging it for {i_ChargingTime}H is out of vehicle's battery capacity!");
+                throw new ValueOutOfRangeException("Battery Time", 0f, MaxBatteryTime);
             }
         }
 
@@ -32,7 +32,7 @@ namespace GarageLogic.Vehicles.Types
         {
             StringBuilder stringBuilder = new StringBuilder();
 
-            stringBuilder.AppendLine(base.ToString());
+            stringBuilder.Append(base.ToString());
             stringBuilder.AppendLine($"Remaining battery time: {RemainingBatteryTime:F2}H");
             stringBuilder.AppendLine($"Maximum battery time: {MaxBatteryTime:F2}H");
 

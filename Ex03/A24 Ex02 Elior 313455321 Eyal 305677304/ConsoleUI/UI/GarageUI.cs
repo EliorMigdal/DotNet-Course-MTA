@@ -11,10 +11,11 @@ using GarageLogic.Vehicles.Types.Objects.Car;
 using GarageLogic.Vehicles.Types.Objects.Truck;
 using GarageLogic.Vehicles.Types;
 using System.Collections.Generic;
+using GarageLogic.Exceptions;
 
 namespace ConsoleUI.UI
 {
-    internal class GarageUI
+    public class GarageUI
     {
         private readonly OutputPrinter r_OutputPrinter = new OutputPrinter();
         private readonly InputReader r_InputReader = new InputReader();
@@ -34,7 +35,7 @@ namespace ConsoleUI.UI
                 try
                 {
                     userInput = handleActionChoice();
-                    r_InputValidator.VerifyActionChoice(userInput, out eUserOptions userChoice);
+                    r_InputValidator.ValidateActionChoice(userInput, out eUserOptions userChoice);
                     ExecuteUserAction(userChoice);
                     hasUserExited = userChoice.Equals(eUserOptions.Exit);
                 }
@@ -49,7 +50,8 @@ namespace ConsoleUI.UI
         private string handleActionChoice()
         {
             r_OutputPrinter.PrintUserOptions();
-            return r_InputReader.ReadUserChoice();
+
+            return r_InputReader.ReadUserAction();
         }
 
         public void ExecuteUserAction(eUserOptions i_UserChoice)
@@ -100,21 +102,18 @@ namespace ConsoleUI.UI
             {
                 try
                 {
-                    eVehicleType vehicleType = readVehicleType();
-                    Vehicle generatedVehicle = r_VehicleFactory.GenerateVehicle(vehicleType);
+                    eVehicleType eVehicleType = handleVehicleTypeInfo();
+                    Vehicle generatedVehicle = r_VehicleFactory.GenerateVehicle(eVehicleType);
                     Owner vehicleOwner = readOwnerInfo();
-                    VehicleRecord vehicleRecord = new VehicleRecord();
-                    vehicleRecord.Owner = vehicleOwner;
-                    vehicleRecord.Status = eVehicleStatus.Fixing;
-                    readVehicleInfo(generatedVehicle, vehicleType);
-                    r_GarageManager.InsertNewVehicle(generatedVehicle, vehicleRecord);
+                    readVehicleInfo(generatedVehicle, eVehicleType);
+                    r_GarageManager.InsertNewVehicle(generatedVehicle, vehicleOwner);
                     Console.WriteLine("Successfully Inserted!");
                     successfullyInserted = true;
                 }
 
-                catch (ArgumentException)
+                catch (VehicleAlreadyExistsException e)
                 {
-                    r_OutputPrinter.PrintError("Invalid choice!");
+                    throw e;
                 }
 
                 catch (Exception e)
@@ -124,13 +123,22 @@ namespace ConsoleUI.UI
             }
         }
 
-        private eVehicleType readVehicleType()
+        private eVehicleType handleVehicleTypeInfo()
         {
-            r_OutputPrinter.PrintVehicleOptions();
-            string userInput = r_InputReader.ReadUserChoice();
-            r_InputValidator.VerifyVehicleTypeChoice(userInput, out eVehicleType userChoice);
+            uint vehicleType = readVehicleType();
+            
+            return VehicleFactory.ValidateVehicleType(vehicleType);
+        }
 
-            return userChoice;
+        private uint readVehicleType()
+        {
+            string userInput;
+
+            r_OutputPrinter.PrintVehicleOptions();
+            userInput = r_InputReader.ReadVehicleType();
+            r_InputValidator.TryParsingToUnsignedInt(userInput, out uint parsedInput);
+
+            return parsedInput;
         }
 
         private void readVehicleInfo(Vehicle i_Vehicle, eVehicleType i_VehicleType)
@@ -142,9 +150,14 @@ namespace ConsoleUI.UI
                 try
                 {
                     handleVehicleData(i_Vehicle);
-                    handleWheelData(i_Vehicle, i_VehicleType);
+                    handleWheelData(i_Vehicle);
                     handleUniqueVehicleTypeData(i_Vehicle, i_VehicleType);
                     successfullyRead = true;
+                }
+
+                catch (VehicleAlreadyExistsException e)
+                {
+                    throw e;
                 }
 
                 catch (Exception e)
@@ -162,10 +175,15 @@ namespace ConsoleUI.UI
             {
                 try
                 {
-                    readVehicleData(out string modelInput, out string licenseInput, out string energyInput);
-                    r_InputValidator.VerifyEnergyPercentageInput(energyInput, out float energyPercentage);
+                    readVehicleData(out string licenseInput, out string modelInput, out string energyInput);
+                    r_InputValidator.TryParsingToFloat(energyInput, out float energyPercentage);
                     insertVehicleInfo(i_Vehicle, modelInput, licenseInput, energyPercentage);
                     successfullyRead = true;
+                }
+
+                catch(VehicleAlreadyExistsException e)
+                {
+                    throw e;
                 }
 
                 catch(Exception e)
@@ -175,7 +193,7 @@ namespace ConsoleUI.UI
             }
         }
 
-        private void handleWheelData(Vehicle i_Vehicle, eVehicleType i_VehicleType)
+        private void handleWheelData(Vehicle i_Vehicle)
         {
             bool successfullyRead = false;
 
@@ -184,7 +202,7 @@ namespace ConsoleUI.UI
                 try
                 {
                     readWheelData(out string manufacturorName, out string airPressureInput);
-                    r_InputValidator.VerifyAirPressureInput(airPressureInput, out float airPressure, i_VehicleType);
+                    r_InputValidator.TryParsingToFloat(airPressureInput, out float airPressure);
                     insertWheelInfo(i_Vehicle, manufacturorName, airPressure);
                     successfullyRead = true;
                 }
@@ -198,18 +216,18 @@ namespace ConsoleUI.UI
 
         private Owner readOwnerInfo()
         {
-            Owner owner = new Owner();
-
-            owner.Name = r_InputReader.ReadOwnerName();
-            owner.Phone = r_InputReader.ReadOwnerPhone();
-
-            return owner;
+            return new Owner
+            {
+                Name = r_InputReader.ReadOwnerName(),
+                Phone = r_InputReader.ReadOwnerPhone()
+            };
         }
 
-        private void readVehicleData(out string o_Model, out string o_License, out string o_Energy)
+        private void readVehicleData(out string o_License, out string o_Model, out string o_Energy)
         {
-            o_Model = r_InputReader.ReadVehicleModel();
             o_License = r_InputReader.ReadLicensePlate();
+            r_GarageManager.VerifyVehicleDoesNotExistInGarage(o_License);
+            o_Model = r_InputReader.ReadVehicleModel();
             o_Energy = r_InputReader.ReadEnergyPercentage();
         }
 
@@ -276,29 +294,32 @@ namespace ConsoleUI.UI
         private void readMotorCycleData(Vehicle i_MotorCycle)
         {
             MotorCycleInfo motorCycleInfo = new MotorCycleInfo();
+            string licenseInput;
+            eMotorCycleLicense validLicense;
 
-            motorCycleInfo.MotorCycleLicense = readMotorCycleLicense();
+            licenseInput = readMotorCycleLicense();
+            validLicense = MotorCycleInfo.ValidateMotorCycleLicense(licenseInput);
+            motorCycleInfo.MotorCycleLicense = validLicense;
             motorCycleInfo.EngineVolume = readMotorCycleEngineVolume();
             insertMotorCycleInfo(i_MotorCycle, motorCycleInfo);
         }
 
-        private eMotorCycleLicense readMotorCycleLicense()
+        private string readMotorCycleLicense()
         {
             string licenseInput;
 
             r_OutputPrinter.PrintSupportedMotorCycleLicenses();
             licenseInput = r_InputReader.ReadMotorCycleLicense();
-            r_InputValidator.VerifyMotorCycleLicenseInput(licenseInput, out eMotorCycleLicense motorCycleLicense);
 
-            return motorCycleLicense;
+            return licenseInput;
         }
 
-        private int readMotorCycleEngineVolume()
+        private uint readMotorCycleEngineVolume()
         {
             string engineVolumeInput;
 
             engineVolumeInput = r_InputReader.ReadMotorCycleEngineVolume();
-            r_InputValidator.VerifyMotorCycleEngineInput(engineVolumeInput, out int engineVolume);
+            r_InputValidator.TryParsingToUnsignedInt(engineVolumeInput, out uint engineVolume);
 
             return engineVolume;
         }
@@ -325,30 +346,33 @@ namespace ConsoleUI.UI
         private void readCarData(Vehicle i_Car)
         {
             CarInfo carInfo = new CarInfo();
+            string colorInput;
+            uint doorInput;
 
-            carInfo.Color = readCarColor();
-            carInfo.NumOfDoors = readCarNumOfDoors();
+            colorInput = readCarColor();
+            doorInput = readCarNumOfDoors();
+            carInfo.Color = CarInfo.ValidateCarColor(colorInput);
+            carInfo.NumOfDoors = CarInfo.ValidateNumOfDoors(doorInput);
             insertCarData(i_Car, carInfo);
         }
 
-        private eCarColors readCarColor()
+        private string readCarColor()
         {
             string colorInput;
 
             r_OutputPrinter.PrintSupportedCarColors();
             colorInput = r_InputReader.ReadCarColor();
-            r_InputValidator.VerifyCarColorInput(colorInput, out eCarColors carColor);
 
-            return carColor;
+            return colorInput;
         }
 
-        private eCarDoors readCarNumOfDoors()
+        private uint readCarNumOfDoors()
         {
             string doorsInput;
 
             r_OutputPrinter.PrintSupportedNumOfCarDoors();
             doorsInput = r_InputReader.ReadNumOfCarDoors();
-            r_InputValidator.VerifyNumOfCarDoorsInput(doorsInput, out eCarDoors carDoors);
+            r_InputValidator.TryParsingToUnsignedInt(doorsInput, out uint carDoors);
 
             return carDoors;
         }
@@ -388,7 +412,7 @@ namespace ConsoleUI.UI
             string dangerousLuggageInput;
 
             dangerousLuggageInput = r_InputReader.ReadDangerousLuggageInfo();
-            r_InputValidator.VerifyDangerousLuggageInput(dangerousLuggageInput, out bool hasDangerousLuggage);
+            r_InputValidator.ValidateDangerousLuggageInput(dangerousLuggageInput, out bool hasDangerousLuggage);
 
             return hasDangerousLuggage;
         }
@@ -398,21 +422,21 @@ namespace ConsoleUI.UI
             string luggageCapacityInput;
 
             luggageCapacityInput = r_InputReader.ReadLuggageCapacity();
-            r_InputValidator.VerifyLuggageCapacity(luggageCapacityInput, out float luggageCapacity);
+            r_InputValidator.TryParsingToFloat(luggageCapacityInput, out float luggageCapacity);
 
             return luggageCapacity;
         }
 
         private void handleFuelData(FueledVehicle i_FueledVehicle)
         {
-            i_FueledVehicle.RemainingFuel = (i_FueledVehicle.MaxFuelCapacity * 
-                i_FueledVehicle.VehicleInfo.RemainingEnergyPercentage) / 100;
+            i_FueledVehicle.RemainingFuel = i_FueledVehicle.MaxFuelCapacity *
+                i_FueledVehicle.VehicleInfo.RemainingEnergyPercentage / 100;
         }
 
         private void handleBatteryData(ElectricalVehicle i_ElectricalVehicle)
         {
-            i_ElectricalVehicle.RemainingBatteryTime = (i_ElectricalVehicle.MaxBatteryTime *
-                i_ElectricalVehicle.VehicleInfo.RemainingEnergyPercentage) / 100;
+            i_ElectricalVehicle.RemainingBatteryTime = i_ElectricalVehicle.MaxBatteryTime *
+                i_ElectricalVehicle.VehicleInfo.RemainingEnergyPercentage / 100;
         }
 
         private void displayLicenses()
@@ -428,10 +452,11 @@ namespace ConsoleUI.UI
 
         private void updateVehicleState()
         {
-            string licensePlate = r_InputReader.ReadLicensePlate();
-            string newState = r_InputReader.ReadNewVehicleState();
-            string oldState = r_GarageManager.UpdateVehicleState(licensePlate, newState);
-
+            string licensePlate, newState, oldState;
+            
+            licensePlate = r_InputReader.ReadLicensePlate();
+            newState = r_InputReader.ReadNewVehicleState();
+            oldState = r_GarageManager.UpdateVehicleState(licensePlate, newState);
             Console.WriteLine($"Successfully updated vehicle licensed {licensePlate}'s state from {oldState} to {newState}!");
         }
 
@@ -446,30 +471,29 @@ namespace ConsoleUI.UI
         private void fillGas()
         {
             string licensePlate, fuelType, fuelAmountInput;
-            float fuelAmount, newAmount;
+            float newAmount;
             
             licensePlate = r_InputReader.ReadLicensePlate();
             r_OutputPrinter.PrintFuelTypes();
             fuelType = r_InputReader.ReadFuelType();
             fuelAmountInput = r_InputReader.ReadFuelAmount();
-            r_InputValidator.VerifyFuelAmount(fuelAmountInput, out fuelAmount);
+            r_InputValidator.TryParsingToFloat(fuelAmountInput, out float fuelAmount);
             newAmount = r_GarageManager.FillGas(licensePlate, fuelType, fuelAmount);
-            Console.WriteLine($"Successfully filled {fuelAmount} litres of gas in vehicile " +
+            Console.WriteLine($"Successfully filled {fuelAmount} litres of gas in vehicle " +
                 $"licensed {licensePlate}. New amount: {newAmount}L");
         }
 
         private void chargeBattery()
         {
             string licensePlate, chargingTimeInput;
-            float chargingTime, newAmount;
+            float newAmount;
 
             licensePlate = r_InputReader.ReadLicensePlate();
             chargingTimeInput = r_InputReader.ReadBatteryAmount();
-            r_InputValidator.ValidateChargingTime(chargingTimeInput, out chargingTime);
+            r_InputValidator.TryParsingToFloat(chargingTimeInput, out float chargingTime);
             newAmount = r_GarageManager.ChargeBattery(licensePlate, chargingTime);
             Console.WriteLine($"Successfully charged {chargingTime / 60f:F2} hours of battery in vehicle " +
                 $"licensed {licensePlate}. New amount: {newAmount:F2}H");
-
         }
 
         private void displayVehicleInfo()

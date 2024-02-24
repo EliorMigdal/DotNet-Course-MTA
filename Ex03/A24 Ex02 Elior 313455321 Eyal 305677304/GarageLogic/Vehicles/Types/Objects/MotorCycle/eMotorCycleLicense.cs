@@ -1,6 +1,6 @@
 ﻿namespace GarageLogic.Vehicles.Types.Objects.MotorCycle
 {
-    public enum eMotorCycleLicense
+    public enum eMotorCycleLicense : uint
     {
         A1 = 1,
         A2 = 2,

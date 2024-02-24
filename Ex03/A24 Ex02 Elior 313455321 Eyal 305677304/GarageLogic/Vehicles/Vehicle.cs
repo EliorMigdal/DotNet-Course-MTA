@@ -14,8 +14,10 @@ namespace GarageLogic.Vehicles
 
             for (int i = 0; i < i_NumOfWheels; i++)
             {
-                Wheel wheel = new Wheel();
-                wheel.MaxAirPressure = i_MaxAirPressure;
+                Wheel wheel = new Wheel
+                {
+                    MaxAirPressure = i_MaxAirPressure
+                };
                 Wheels.Add(wheel);
             }
         }

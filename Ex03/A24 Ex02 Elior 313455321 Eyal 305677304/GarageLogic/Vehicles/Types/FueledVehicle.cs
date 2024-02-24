@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GarageLogic.Exceptions;
+using System;
 using System.Text;
 
 namespace GarageLogic.Vehicles.Types
@@ -20,8 +21,8 @@ namespace GarageLogic.Vehicles.Types
         {
             if (!FuelType.Equals(i_FuelType))
             {
-                throw new ArgumentException($"Invalid fuel type: Vehicle licensed {VehicleInfo.LicenseID} accepts fuel type " +
-                    $"{FuelType}, not {i_FuelType}!");
+                throw new ArgumentException($"Invalid fuel type: Vehicle licensed {VehicleInfo.LicenseID} " +
+                    $"accepts fuel type {FuelType}, not {i_FuelType}!");
             }
         }
 
@@ -29,8 +30,7 @@ namespace GarageLogic.Vehicles.Types
         {
             if (i_FuelAmount + RemainingFuel > MaxFuelCapacity)
             {
-                throw new ArgumentException($"Denied: Vehicle licensed {VehicleInfo.LicenseID} has already {RemainingFuel} litres " +
-                    $"of fuel.\nAdding {i_FuelAmount}L of fuel is out of vehicle's fuel tank capacity!");
+                throw new ValueOutOfRangeException("Fuel amount", 0f, MaxFuelCapacity);
             }
 
             else if (i_FuelAmount <= 0)
@@ -43,7 +43,7 @@ namespace GarageLogic.Vehicles.Types
         {
             StringBuilder stringBuilder = new StringBuilder();
 
-            stringBuilder.AppendLine(base.ToString());
+            stringBuilder.Append(base.ToString());
             stringBuilder.AppendLine($"Fuel type: {FuelType}");
             stringBuilder.AppendLine($"Remaining fuel: {RemainingFuel:F2}L");
             stringBuilder.AppendLine($"Maximum fuel capacity: {MaxFuelCapacity:F2}L");

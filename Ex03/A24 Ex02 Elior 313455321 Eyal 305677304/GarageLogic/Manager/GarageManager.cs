@@ -1,4 +1,5 @@
-﻿using GarageLogic.Vehicles;
+﻿using GarageLogic.Exceptions;
+using GarageLogic.Vehicles;
 using GarageLogic.Vehicles.Types;
 using System;
 using System.Collections.Generic;
@@ -13,39 +14,51 @@ namespace GarageLogic.Manager
         private readonly Dictionary<string, VehicleRecord> r_VehicleRecords 
             = new Dictionary<string, VehicleRecord>();
 
-        public void InsertNewVehicle(Vehicle i_Vehicle, VehicleRecord i_VehicleRecord)
+        public void InsertNewVehicle(Vehicle i_Vehicle, Owner i_VehicleOwner)
         {
+            VehicleRecord vehicleRecord = new VehicleRecord();
+
+            vehicleRecord.Owner = i_VehicleOwner;
+            vehicleRecord.Status = eVehicleStatus.Fixing;
             r_Vehicles.Add(i_Vehicle);
-            r_VehicleRecords.Add(i_Vehicle.VehicleInfo.LicenseID, i_VehicleRecord);
+            r_VehicleRecords.Add(i_Vehicle.VehicleInfo.LicenseID, vehicleRecord);
         }
 
-        public bool IsVehicleInGarage(string i_LicesnePlate)
+        private bool isVehicleInGarage(string i_LicesnePlate)
         {
             return r_VehicleRecords.ContainsKey(i_LicesnePlate);
         }
 
         public List<string> FilterLicensePlatesByStatus(string i_VehicleStatus)
         {
-            eVehicleStatus vehicleStatus;
+            List<string> result;
 
-            validateVehicleStatus(i_VehicleStatus, out vehicleStatus);
+            if (!i_VehicleStatus.Equals("All"))
+            {
+                validateVehicleStatus(i_VehicleStatus, out eVehicleStatus vehicleStatus);
 
-            List<string> result = r_VehicleRecords
-                .Where(pair => i_VehicleStatus.Equals("All") || pair.Value.Status.Equals(vehicleStatus))
-                .Select(pair => pair.Key)
-                .ToList();
+                result = r_VehicleRecords
+                    .Where(pair => pair.Value.Status.Equals(vehicleStatus))
+                    .Select(pair => pair.Key)
+                    .ToList();
+            }
+
+            else
+            {
+                result = r_VehicleRecords
+                    .Select(pair => pair.Key)
+                    .ToList();
+            }
 
             return result;
         }
 
         public string UpdateVehicleState(string i_LicensePlate, string i_VehicleState)
         {
-            eVehicleStatus vehicleStatus;
             string oldState;
 
             verifyVehicleExistsInGarage(i_LicensePlate);
-            validateVehicleStatus(i_VehicleState, out vehicleStatus);
-
+            validateVehicleStatus(i_VehicleState, out eVehicleStatus vehicleStatus);
             oldState = r_VehicleRecords[i_LicensePlate].Status.ToString();
             r_VehicleRecords[i_LicensePlate].Status = vehicleStatus;
 
@@ -103,30 +116,25 @@ namespace GarageLogic.Manager
 
         private bool isStatusValid(string i_Status, out eVehicleStatus o_VehicleStatus)
         {
-            bool isStatusValid = i_Status.Equals("All");
-
-            o_VehicleStatus = eVehicleStatus.Fixing;
-
-            if (!isStatusValid)
-            {
-                foreach (eVehicleStatus status in Enum.GetValues(typeof(eVehicleStatus)))
-                {
-                    if (Enum.TryParse(i_Status, true, out o_VehicleStatus))
-                    {
-                        isStatusValid = true; 
-                        break;
-                    }
-                }
-            }
+            bool isStatusValid = Enum.TryParse(i_Status, out o_VehicleStatus);
 
             return isStatusValid;
         }
 
         private void verifyVehicleExistsInGarage(string i_LicensePlate)
         {
-            if (!IsVehicleInGarage(i_LicensePlate))
+            if (!isVehicleInGarage(i_LicensePlate))
             {
                 throw new ArgumentException($"Vehicle licensed {i_LicensePlate} doesn't exist in our garage!");
+            }
+        }
+
+        public void VerifyVehicleDoesNotExistInGarage(string i_LicensePlate)
+        {
+            if (isVehicleInGarage(i_LicensePlate))
+            {
+                r_VehicleRecords[i_LicensePlate].Status = eVehicleStatus.Fixing;
+                throw new VehicleAlreadyExistsException(i_LicensePlate);
             }
         }
 

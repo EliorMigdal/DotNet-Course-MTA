@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Exceptions\ValueOutOfRangeException.cs" />
+    <Compile Include="Exceptions\VehicleAlreadyExistsException.cs" />
     <Compile Include="Manager\eVehicleStatus.cs" />
     <Compile Include="Manager\GarageManager.cs" />
     <Compile Include="Manager\Owner.cs" />

@@ -1,6 +1,6 @@
 ﻿namespace GarageLogic.Vehicles
 {
-    public enum eMaxWheelAirPressure
+    public enum eMaxWheelAirPressure : uint
     {
         MotorCycle = 29,
         Car = 30,
