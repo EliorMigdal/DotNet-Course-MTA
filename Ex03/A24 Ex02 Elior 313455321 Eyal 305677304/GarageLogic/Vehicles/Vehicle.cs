@@ -18,6 +18,7 @@ namespace GarageLogic.Vehicles
                 {
                     MaxAirPressure = i_MaxAirPressure
                 };
+
                 Wheels.Add(wheel);
             }
         }
@@ -28,6 +29,16 @@ namespace GarageLogic.Vehicles
             {
                 wheel.CurrentAirPressure = wheel.MaxAirPressure;
             }
+        }
+
+        public virtual List<string> GetMembersList()
+        {
+            List<string> members = new List<string>();
+
+            members.AddRange(VehicleInfo.GetDataMembers());
+            members.AddRange(Wheel.GetDataMembers());
+
+            return members;
         }
 
         public override string ToString()

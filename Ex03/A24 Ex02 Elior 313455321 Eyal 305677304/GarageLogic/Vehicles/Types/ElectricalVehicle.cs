@@ -1,5 +1,6 @@
 ﻿using GarageLogic.Exceptions;
 using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace GarageLogic.Vehicles.Types
@@ -26,6 +27,16 @@ namespace GarageLogic.Vehicles.Types
             {
                 throw new ValueOutOfRangeException("Battery Time", 0f, MaxBatteryTime);
             }
+        }
+
+        public override List<string> GetMembersList()
+        {
+            List<string> members = new List<string>();
+
+            members.AddRange(base.GetMembersList());
+            members.Add("Remaining battery time");
+            
+            return members;
         }
 
         public override string ToString()

@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Collections.Generic;
+using System.Text;
 
 namespace GarageLogic.Vehicles.Types.Objects.Car
 {
@@ -10,6 +11,16 @@ namespace GarageLogic.Vehicles.Types.Objects.Car
         {
             InstallWheels((int)eNumOfWheels.Car, (float)eMaxWheelAirPressure.Car);
             MaxBatteryTime = 2.8f;
+        }
+
+        public override List<string> GetMembersList()
+        {
+            List<string> members = new List<string>();
+
+            members.AddRange(base.GetMembersList());
+            members.AddRange(CarInfo.GetMembersList());
+
+            return members;
         }
 
         public override string ToString()

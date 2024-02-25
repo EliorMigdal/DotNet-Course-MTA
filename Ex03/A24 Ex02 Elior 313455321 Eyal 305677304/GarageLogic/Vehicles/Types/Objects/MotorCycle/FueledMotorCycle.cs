@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Collections.Generic;
+using System.Text;
 
 namespace GarageLogic.Vehicles.Types.Objects.MotorCycle
 {
@@ -11,6 +12,16 @@ namespace GarageLogic.Vehicles.Types.Objects.MotorCycle
             InstallWheels((int)eNumOfWheels.MotorCycle, (float)eMaxWheelAirPressure.MotorCycle);
             FuelType = eFuelType.Octan98;
             MaxFuelCapacity = 5.8f;
+        }
+
+        public override List<string> GetMembersList()
+        {
+            List<string> members = new List<string>();
+
+            members.AddRange(base.GetMembersList());
+            members.AddRange(MotorCycleInfo.GetMembersList());
+
+            return members;
         }
 
         public override string ToString()

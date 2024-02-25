@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using GarageLogic.Vehicles.Types.Objects.MotorCycle;
+using System.Collections.Generic;
+using System.Text;
 
 namespace GarageLogic.Vehicles.Types.Objects.Truck
 {
@@ -6,6 +8,15 @@ namespace GarageLogic.Vehicles.Types.Objects.Truck
     {
         public bool HasDangerousLuggage { get; set; }
         public float LuggageCapacity { get; set; }
+
+        public static List<string> GetMembersList()
+        {
+            return new List<string>
+            {
+                "Has dangerous luggage",
+                "Luggage capacity"
+            };
+        }
 
         public override string ToString()
         {

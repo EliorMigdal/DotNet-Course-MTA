@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace GarageLogic.Vehicles.Types.Objects.MotorCycle
@@ -23,6 +24,15 @@ namespace GarageLogic.Vehicles.Types.Objects.MotorCycle
             }
 
             return licenseType;
+        }
+
+        public static List<string> GetMembersList()
+        {
+            return new List<string>
+            {
+                "Motorcycle license",
+                "Engine volume"
+            };
         }
 
         public override string ToString()

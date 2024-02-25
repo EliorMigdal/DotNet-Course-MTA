@@ -1,5 +1,6 @@
 ﻿using GarageLogic.Exceptions;
 using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace GarageLogic.Vehicles.Types
@@ -37,6 +38,17 @@ namespace GarageLogic.Vehicles.Types
             {
                 throw new ArgumentException("Cannot add a non-positive amount of fuel!");
             }
+        }
+
+        public override List<string> GetMembersList()
+        {
+            List<string> members = new List<string>();
+
+            members.AddRange(base.GetMembersList());
+            members.Add("Fuel type");
+            members.Add("Remaining fuel");
+
+            return members;
         }
 
         public override string ToString()

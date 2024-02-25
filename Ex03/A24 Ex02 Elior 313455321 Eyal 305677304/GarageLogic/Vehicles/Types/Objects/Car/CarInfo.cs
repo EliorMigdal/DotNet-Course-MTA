@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace GarageLogic.Vehicles.Types.Objects.Car
@@ -36,6 +37,15 @@ namespace GarageLogic.Vehicles.Types.Objects.Car
             {
                 return (eCarDoors)i_DoorsChoice;
             }
+        }
+
+        public static List<string> GetMembersList()
+        {
+            return new List<string>
+            {
+                "Car color",
+                "Car number of doors"
+            };
         }
 
         public override string ToString()

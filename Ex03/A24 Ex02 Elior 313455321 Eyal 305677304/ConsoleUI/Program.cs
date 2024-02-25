@@ -2,7 +2,7 @@
 
 namespace ConsoleUI
 {
-    internal class Program
+    public class Program
     {
         public static void Main()
         {
