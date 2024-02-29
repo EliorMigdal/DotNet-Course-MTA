@@ -1,5 +1,4 @@
 ﻿using GarageLogic.Exceptions;
-using System.Collections.Generic;
 using System.Text;
 
 namespace GarageLogic.Vehicles
@@ -35,15 +34,6 @@ namespace GarageLogic.Vehicles
         public void InflateToMaxPressure()
         {
             InflateTire(MaxAirPressure - CurrentAirPressure);
-        }
-
-        public static List<string> GetDataMembers()
-        {
-            return new List<string>
-            {
-                "Manufacturor name",
-                "Current air pressure"
-            };
         }
 
         public override string ToString()

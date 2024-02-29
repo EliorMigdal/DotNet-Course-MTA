@@ -1,19 +1,25 @@
 ﻿using GarageLogic.Exceptions;
 using System;
-using System.Collections.Generic;
 using System.Text;
 
 namespace GarageLogic.Vehicles.Types
 {
     public abstract class ElectricalVehicle : Vehicle
     {
-        public float RemainingBatteryTime { get; set; }
+        public float RemainingBatteryTime
+        {
+            get
+            {
+                return MaxBatteryTime * VehicleInfo.RemainingEnergyPercentage / 100;
+            }
+        }
         public float MaxBatteryTime { get; set; }
 
         public void ChargeBattery(float i_ChargingTime)
         {
             validateChargingTime(i_ChargingTime);
-            RemainingBatteryTime += i_ChargingTime;
+            VehicleInfo.RemainingEnergyPercentage = (RemainingBatteryTime + 
+                i_ChargingTime) * 100 / MaxBatteryTime;
         }
 
         private void validateChargingTime(float i_ChargingTime) 
@@ -29,14 +35,9 @@ namespace GarageLogic.Vehicles.Types
             }
         }
 
-        public override List<string> GetMembersList()
+        protected void InitializeMaxBatteryTime(float i_MaxTime)
         {
-            List<string> members = new List<string>();
-
-            members.AddRange(base.GetMembersList());
-            members.Add("Remaining battery time");
-            
-            return members;
+            MaxBatteryTime = i_MaxTime;
         }
 
         public override string ToString()

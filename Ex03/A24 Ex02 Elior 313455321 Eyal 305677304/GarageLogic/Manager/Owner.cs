@@ -4,8 +4,8 @@ namespace GarageLogic.Manager
 {
     public class Owner
     {
-        public string Name { get; set; }
-        public string Phone {  get; set; }
+        public string Name { private get; set; }
+        public string Phone {  private get; set; }
 
         public override string ToString()
         {

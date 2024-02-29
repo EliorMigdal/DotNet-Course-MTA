@@ -5,7 +5,7 @@ namespace GarageLogic.Vehicles
 {
     public abstract class Vehicle
     {
-        public VehicleInfo VehicleInfo { get; set; } = new VehicleInfo();
+        public VehicleInfo VehicleInfo { get; set; }
         public List<Wheel> Wheels { get; set; }
 
         protected void InstallWheels(int i_NumOfWheels, float i_MaxAirPressure)
@@ -29,16 +29,6 @@ namespace GarageLogic.Vehicles
             {
                 wheel.CurrentAirPressure = wheel.MaxAirPressure;
             }
-        }
-
-        public virtual List<string> GetMembersList()
-        {
-            List<string> members = new List<string>();
-
-            members.AddRange(VehicleInfo.GetDataMembers());
-            members.AddRange(Wheel.GetDataMembers());
-
-            return members;
         }
 
         public override string ToString()

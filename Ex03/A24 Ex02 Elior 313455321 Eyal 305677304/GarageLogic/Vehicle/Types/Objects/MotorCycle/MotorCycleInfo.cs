@@ -1,15 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text;
 
 namespace GarageLogic.Vehicles.Types.Objects.MotorCycle
 {
-    public class MotorCycleInfo
+    public class MotorCycleInfo : VehicleInfo
     {
-        public eMotorCycleLicense MotorCycleLicense { get; set; }
+        public enum eMotorCycleLicense : uint
+        {
+            A1 = 1,
+            A2 = 2,
+            AB = 3,
+            B = 4
+        }
+
+        public eMotorCycleLicense MotorCycleLicense { get; private set; }
         public uint EngineVolume { get; set; }
 
-        public static eMotorCycleLicense ValidateMotorCycleLicense(string i_License)
+        public void SetMotorLicence(string i_LicenseInput)
+        {
+            MotorCycleLicense = validateMotorCycleLicense(i_LicenseInput);
+        }
+
+        private eMotorCycleLicense validateMotorCycleLicense(string i_License)
         {
             eMotorCycleLicense licenseType;
 
@@ -26,19 +38,11 @@ namespace GarageLogic.Vehicles.Types.Objects.MotorCycle
             return licenseType;
         }
 
-        public static List<string> GetMembersList()
-        {
-            return new List<string>
-            {
-                "Motorcycle license",
-                "Engine volume"
-            };
-        }
-
         public override string ToString()
         {
             StringBuilder stringBuilder = new StringBuilder();
 
+            stringBuilder.Append(base.ToString());
             stringBuilder.AppendLine($"Motorcycle license: {MotorCycleLicense}");
             stringBuilder.AppendLine($"Motorcycle engine volume: {EngineVolume}");
 

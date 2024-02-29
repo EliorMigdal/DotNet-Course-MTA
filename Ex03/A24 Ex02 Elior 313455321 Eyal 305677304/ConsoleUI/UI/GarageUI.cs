@@ -9,7 +9,6 @@ using GarageLogic.Manager;
 using GarageLogic.Vehicles.Types.Objects.MotorCycle;
 using GarageLogic.Vehicles.Types.Objects.Car;
 using GarageLogic.Vehicles.Types.Objects.Truck;
-using GarageLogic.Vehicles.Types;
 using System.Collections.Generic;
 using GarageLogic.Exceptions;
 
@@ -36,7 +35,7 @@ namespace ConsoleUI.UI
                 {
                     userInput = handleActionChoice();
                     r_InputValidator.ValidateActionChoice(userInput, out eUserOptions userChoice);
-                    ExecuteUserAction(userChoice);
+                    executeUserAction(userChoice);
                     hasUserExited = userChoice.Equals(eUserOptions.Exit);
                 }
 
@@ -54,7 +53,7 @@ namespace ConsoleUI.UI
             return r_InputReader.ReadUserAction();
         }
 
-        public void ExecuteUserAction(eUserOptions i_UserChoice)
+        private void executeUserAction(eUserOptions i_UserChoice)
         {
             switch (i_UserChoice)
             {
@@ -102,10 +101,11 @@ namespace ConsoleUI.UI
             {
                 try
                 {
-                    eVehicleType eVehicleType = handleVehicleTypeInfo();
-                    Vehicle generatedVehicle = r_VehicleFactory.GenerateVehicle(eVehicleType);
+                    uint vehicleInput = readVehicleType();
+                    Vehicle generatedVehicle = r_VehicleFactory.GenerateVehicle(vehicleInput, 
+                        out eVehicleType vehicleType);
                     Owner vehicleOwner = readOwnerInfo();
-                    readVehicleInfo(generatedVehicle, eVehicleType);
+                    readVehicleInfo(generatedVehicle, vehicleType);
                     r_GarageManager.InsertNewVehicle(generatedVehicle, vehicleOwner);
                     Console.WriteLine("Successfully Inserted!");
                     successfullyInserted = true;
@@ -121,13 +121,6 @@ namespace ConsoleUI.UI
                     r_OutputPrinter.PrintError(e.Message);
                 }
             }
-        }
-
-        private eVehicleType handleVehicleTypeInfo()
-        {
-            uint vehicleType = readVehicleType();
-            
-            return VehicleFactory.ValidateVehicleType(vehicleType);
         }
 
         private uint readVehicleType()
@@ -263,7 +256,7 @@ namespace ConsoleUI.UI
                 {
                     switch (i_VehicleType)
                     {
-                        case eVehicleType.FueledMotoryCycle:
+                        case eVehicleType.FueledMotorCycle:
                         case eVehicleType.ElectricalMotorCycle:
                             readMotorCycleData(i_Vehicle);
                             break;
@@ -293,15 +286,12 @@ namespace ConsoleUI.UI
 
         private void readMotorCycleData(Vehicle i_MotorCycle)
         {
-            MotorCycleInfo motorCycleInfo = new MotorCycleInfo();
+            MotorCycleInfo motorCycleInfo = i_MotorCycle.VehicleInfo as MotorCycleInfo;
             string licenseInput;
-            eMotorCycleLicense validLicense;
 
             licenseInput = readMotorCycleLicense();
-            validLicense = MotorCycleInfo.ValidateMotorCycleLicense(licenseInput);
-            motorCycleInfo.MotorCycleLicense = validLicense;
+            motorCycleInfo.SetMotorLicence(licenseInput);
             motorCycleInfo.EngineVolume = readMotorCycleEngineVolume();
-            insertMotorCycleInfo(i_MotorCycle, motorCycleInfo);
         }
 
         private string readMotorCycleLicense()
@@ -324,36 +314,16 @@ namespace ConsoleUI.UI
             return engineVolume;
         }
 
-        private void insertMotorCycleInfo(Vehicle i_MotorCycle, MotorCycleInfo i_MotorCycleInfo)
-        {
-            if (i_MotorCycle is FueledMotorCycle)
-            {
-                FueledMotorCycle fueledMotorCycle = i_MotorCycle as FueledMotorCycle;
-
-                fueledMotorCycle.MotorCycleInfo = i_MotorCycleInfo;
-                handleFuelData(fueledMotorCycle);
-            }
-
-            else
-            {
-                ElectricalMotorCycle electricalMotorCycle = i_MotorCycle as ElectricalMotorCycle;
-
-                electricalMotorCycle.MotorCycleInfo = i_MotorCycleInfo;
-                handleBatteryData(electricalMotorCycle);
-            }
-        }
-
         private void readCarData(Vehicle i_Car)
         {
-            CarInfo carInfo = new CarInfo();
+            CarInfo carInfo = i_Car.VehicleInfo as CarInfo;
             string colorInput;
             uint doorInput;
 
             colorInput = readCarColor();
             doorInput = readCarNumOfDoors();
-            carInfo.Color = CarInfo.ValidateCarColor(colorInput);
-            carInfo.NumOfDoors = CarInfo.ValidateNumOfDoors(doorInput);
-            insertCarData(i_Car, carInfo);
+            carInfo.SetCarColor(colorInput);
+            carInfo.SetNumOfDoors(doorInput);
         }
 
         private string readCarColor()
@@ -377,34 +347,12 @@ namespace ConsoleUI.UI
             return carDoors;
         }
 
-        private void insertCarData(Vehicle i_Car, CarInfo i_CarInfo)
-        {
-            if (i_Car is FueledCar)
-            {
-                FueledCar fueledCar = i_Car as FueledCar;
-
-                fueledCar.CarInfo = i_CarInfo;
-                handleFuelData(fueledCar);
-            }
-
-            else
-            {
-                ElectricalCar electricalCar = i_Car as ElectricalCar;
-
-                electricalCar.CarInfo = i_CarInfo;
-                handleBatteryData(electricalCar);
-            }
-        }
-
         private void readTruckData(Vehicle i_Truck)
         {
-            TruckInfo truckInfo = new TruckInfo();
-            Truck truck = i_Truck as Truck;
+            TruckInfo truckInfo = i_Truck.VehicleInfo as TruckInfo;
 
             truckInfo.HasDangerousLuggage = readDangerousLuggageData();
             truckInfo.LuggageCapacity = readLuggageCapacity();
-            truck.TruckInfo = truckInfo;
-            handleFuelData(truck);
         }
 
         private bool readDangerousLuggageData()
@@ -425,18 +373,6 @@ namespace ConsoleUI.UI
             r_InputValidator.TryParsingToFloat(luggageCapacityInput, out float luggageCapacity);
 
             return luggageCapacity;
-        }
-
-        private void handleFuelData(FueledVehicle i_FueledVehicle)
-        {
-            i_FueledVehicle.RemainingFuel = i_FueledVehicle.MaxFuelCapacity *
-                i_FueledVehicle.VehicleInfo.RemainingEnergyPercentage / 100;
-        }
-
-        private void handleBatteryData(ElectricalVehicle i_ElectricalVehicle)
-        {
-            i_ElectricalVehicle.RemainingBatteryTime = i_ElectricalVehicle.MaxBatteryTime *
-                i_ElectricalVehicle.VehicleInfo.RemainingEnergyPercentage / 100;
         }
 
         private void displayLicenses()

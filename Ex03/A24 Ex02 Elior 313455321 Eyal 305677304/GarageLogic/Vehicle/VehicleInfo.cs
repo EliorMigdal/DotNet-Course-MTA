@@ -1,5 +1,4 @@
 ﻿using GarageLogic.Exceptions;
-using System.Collections.Generic;
 using System.Text;
 
 namespace GarageLogic.Vehicles
@@ -25,16 +24,6 @@ namespace GarageLogic.Vehicles
 
                 m_RemainingEnergyPercentage = value;
             }
-        }
-
-        public static List<string> GetDataMembers()
-        {
-            return new List<string>
-            {
-                "Vehicle Model",
-                "Vehicle license plate",
-                "Remaining energy percentage"
-            };
         }
 
         public override string ToString()

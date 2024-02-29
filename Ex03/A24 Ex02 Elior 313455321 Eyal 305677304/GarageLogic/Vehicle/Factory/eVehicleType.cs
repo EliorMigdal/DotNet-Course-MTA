@@ -2,7 +2,7 @@
 {
     public enum eVehicleType : uint
     {
-        FueledMotoryCycle = 1,
+        FueledMotorCycle = 1,
         ElectricalMotorCycle,
         FueledCar,
         ElectricalCar,

@@ -1,15 +1,40 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text;
 
 namespace GarageLogic.Vehicles.Types.Objects.Car
 {
-    public class CarInfo
+    public class CarInfo : VehicleInfo
     {
-        public eCarColors Color { get; set; }
-        public eCarDoors NumOfDoors { get; set; }
+        public enum eCarColors
+        {
+            Blue,
+            White,
+            Red,
+            Yellow
+        }
 
-        public static eCarColors ValidateCarColor(string i_ColorChoice)
+        public enum eCarDoors : uint
+        {
+            TwoDoor = 2,
+            ThreeDoor = 3,
+            FourDoor = 4,
+            FiveDoor = 5
+        }
+
+        public eCarColors Color { get; private set; }
+        public eCarDoors NumOfDoors { get; private set; }
+
+        public void SetCarColor(string i_ColorInput)
+        {
+            Color = validateCarColor(i_ColorInput);
+        }
+
+        public void SetNumOfDoors(uint i_NumOfDoors)
+        {
+            NumOfDoors = validateNumOfDoors(i_NumOfDoors);
+        }
+
+        private eCarColors validateCarColor(string i_ColorChoice)
         {
             eCarColors color;
 
@@ -26,7 +51,7 @@ namespace GarageLogic.Vehicles.Types.Objects.Car
             return color;
         }
 
-        public static eCarDoors ValidateNumOfDoors(uint i_DoorsChoice)
+        private eCarDoors validateNumOfDoors(uint i_DoorsChoice)
         {
             if (!Enum.IsDefined(typeof(eCarDoors), i_DoorsChoice))
             {
@@ -39,19 +64,11 @@ namespace GarageLogic.Vehicles.Types.Objects.Car
             }
         }
 
-        public static List<string> GetMembersList()
-        {
-            return new List<string>
-            {
-                "Car color",
-                "Car number of doors"
-            };
-        }
-
         public override string ToString()
         {
             StringBuilder stringBuilder = new StringBuilder();
 
+            stringBuilder.Append(base.ToString());
             stringBuilder.AppendLine($"Car color: {Color}");
             stringBuilder.AppendLine($"Car doors: {(uint)NumOfDoors}");
 

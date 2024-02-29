@@ -1,21 +1,35 @@
 ﻿using GarageLogic.Exceptions;
 using System;
-using System.Collections.Generic;
 using System.Text;
 
 namespace GarageLogic.Vehicles.Types
 {
     public abstract class FueledVehicle : Vehicle
     {
+        public enum eFuelType
+        {
+            Octan95,
+            Octan96,
+            Octan98,
+            Soler
+        }
+
         public eFuelType FuelType { get; set; }
-        public float RemainingFuel { get; set; }
         public float MaxFuelCapacity { get; set; }
+        public float RemainingFuel
+        {
+            get
+            {
+                return MaxFuelCapacity * VehicleInfo.RemainingEnergyPercentage / 100;
+            }
+        }
 
         public void AddFuel(float i_FuelAmount, eFuelType i_FuelType)
         {
             validateFuelType(i_FuelType);
             validateFuelAmount(i_FuelAmount);
-            RemainingFuel += i_FuelAmount;
+            VehicleInfo.RemainingEnergyPercentage = (RemainingFuel +  
+                i_FuelAmount) * 100 / MaxFuelCapacity;
         }
 
         private void validateFuelType(eFuelType i_FuelType)
@@ -40,15 +54,10 @@ namespace GarageLogic.Vehicles.Types
             }
         }
 
-        public override List<string> GetMembersList()
+        protected void InitializeFuelData(eFuelType i_FuelType, float i_MaxCapacity)
         {
-            List<string> members = new List<string>();
-
-            members.AddRange(base.GetMembersList());
-            members.Add("Fuel type");
-            members.Add("Remaining fuel");
-
-            return members;
+            FuelType = i_FuelType;
+            MaxFuelCapacity = i_MaxCapacity;
         }
 
         public override string ToString()

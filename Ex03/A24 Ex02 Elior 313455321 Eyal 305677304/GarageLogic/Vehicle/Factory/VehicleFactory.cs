@@ -7,13 +7,14 @@ namespace GarageLogic.Vehicles.Factory
 {
     public class VehicleFactory
     {
-        public Vehicle GenerateVehicle(eVehicleType i_VehicleType)
+        public Vehicle GenerateVehicle(uint i_VehicleType, out eVehicleType o_VehicleType)
         {
             Vehicle generatedVehicle;
+            eVehicleType vehicleType = validateVehicleType(i_VehicleType);
 
-            switch (i_VehicleType)
+            switch (vehicleType)
             {
-                case eVehicleType.FueledMotoryCycle:
+                case eVehicleType.FueledMotorCycle:
                     generatedVehicle = new FueledMotorCycle();
                     break;
 
@@ -38,10 +39,13 @@ namespace GarageLogic.Vehicles.Factory
                     break;
             }
 
+            o_VehicleType = vehicleType;
+            setVehicleInfo(generatedVehicle, vehicleType);
+
             return generatedVehicle;
         }
 
-        public static eVehicleType ValidateVehicleType(uint i_VehicleType)
+        private eVehicleType validateVehicleType(uint i_VehicleType)
         {
             eVehicleType vehicleType;
 
@@ -56,6 +60,29 @@ namespace GarageLogic.Vehicles.Factory
             }
 
             return vehicleType;
+        }
+
+        private void setVehicleInfo(Vehicle vehicle, eVehicleType vehicleType)
+        {
+            switch (vehicleType)
+            {
+                case eVehicleType.FueledMotorCycle:
+                case eVehicleType.ElectricalMotorCycle:
+                    vehicle.VehicleInfo = new MotorCycleInfo();
+                    break;
+
+                case eVehicleType.FueledCar:
+                case eVehicleType.ElectricalCar:
+                    vehicle.VehicleInfo = new CarInfo();
+                    break;
+
+                case eVehicleType.Truck:
+                    vehicle.VehicleInfo = new TruckInfo();
+                    break;
+
+                default:
+                    break;
+            }
         }
     }
 }

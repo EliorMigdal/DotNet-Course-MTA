@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using static GarageLogic.Vehicles.Types.FueledVehicle;
 
 namespace GarageLogic.Manager
 {
