@@ -35,5 +35,21 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DelegatesTest.cs" />
+    <Compile Include="InterfaceTest.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Services.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Ex04.Menus.Delegates\Ex04.Menus.Delegates.csproj">
+      <Project>{7e106184-4e8d-4332-9afc-545367e4297e}</Project>
+      <Name>Ex04.Menus.Delegates</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ex04.Menus.Interface\Ex04.Menus.Interface.csproj">
+      <Project>{586da545-8f0c-4c4e-be89-9bb6090554cc}</Project>
+      <Name>Ex04.Menus.Interface</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
