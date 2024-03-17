@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Ex04.Menus.Interface
 {
-    public abstract class Menu
+    public class Menu
     {
         public string Title { get; set; }
         protected LinkedList<MenuItem> m_MenuItems = null;

@@ -39,7 +39,6 @@
     <Compile Include="DelegatesTest.cs" />
     <Compile Include="InterfaceTest.cs" />
     <Compile Include="Program.cs" />
-    <Compile Include="Services.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Ex04.Menus.Delegates\Ex04.Menus.Delegates.csproj">
