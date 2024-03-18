@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Ex04.Menus.Delegates
 {
-    public class MenuItem : Menu
+    public class MenuItem : MainMenu
     {
         public event Action ItemSelection;
 

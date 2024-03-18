@@ -2,7 +2,7 @@
 
 namespace Ex04.Menus.Interface
 {
-    public class MenuItem : Menu
+    public class MenuItem : MainMenu
     {
         private LinkedList<IMenuItemObserver> m_ItemObservers = null;
 
