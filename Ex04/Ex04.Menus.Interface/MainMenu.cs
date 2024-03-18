@@ -49,7 +49,7 @@ namespace Ex04.Menus.Interface
 
                 if (userDecision != 0)
                 {
-                    m_MenuItems.ElementAt(userDecision - 1).OnSelection();
+                    m_MenuItems.ElementAt(userDecision - 1).NotifySelection();
                 }
 
             } while (userDecision != 0);

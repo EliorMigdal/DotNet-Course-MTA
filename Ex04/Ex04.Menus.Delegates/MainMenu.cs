@@ -49,7 +49,7 @@ namespace Ex04.Menus.Delegates
 
                 if (userDecision != 0)
                 {
-                    m_MenuItems.ElementAt(userDecision - 1).OnItemSelection();
+                    m_MenuItems.ElementAt(userDecision - 1).NotifySelection();
                 }
 
             } while (userDecision != 0);

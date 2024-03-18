@@ -27,8 +27,13 @@ namespace Ex04.Menus.Interface
         {
             m_ItemObservers?.Remove(i_Observer);
         }
+        
+        public void NotifySelection()
+        {
+            OnSelection();
+        }
 
-        public void OnSelection()
+        protected virtual void OnSelection()
         {
             if (m_ItemObservers != null)
             {

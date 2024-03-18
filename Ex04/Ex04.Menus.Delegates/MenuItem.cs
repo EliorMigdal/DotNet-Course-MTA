@@ -13,7 +13,12 @@ namespace Ex04.Menus.Delegates
             Title = i_Title;
         }
 
-        public virtual void OnItemSelection()
+        public void NotifySelection()
+        {
+            OnMenuItemSelection();
+        }
+
+        protected virtual void OnMenuItemSelection()
         {
             if (ItemSelection != null)
             {
