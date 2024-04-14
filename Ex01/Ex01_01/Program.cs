@@ -1,6 +1,5 @@
 using System;
 using System.Text;
-using static System.Console;
 
 namespace Ex01_01
 {
@@ -8,98 +7,100 @@ namespace Ex01_01
     {
         public static void Main()
         {
-            RunProgram();
+            runProgram();
         }
 
-        public static void RunProgram()
+        private static void runProgram()
         {
             string firstBinaryInput, secondBinaryInput, thirdBinaryInput;
             int firstDecimal, secondDecimal, thirdDecimal;
 
-            WriteLine($"Welcome to our program!\nPlease enter 3 9-digit positive binary numbers.");
-            ReadInput(out firstBinaryInput, out secondBinaryInput, out thirdBinaryInput);
-            firstDecimal = ConvertBinaryToDecimal(firstBinaryInput);
-            secondDecimal = ConvertBinaryToDecimal(secondBinaryInput);
-            thirdDecimal = ConvertBinaryToDecimal(thirdBinaryInput);
-            DisplayConversionOutputSorted(firstDecimal, secondDecimal, thirdDecimal);
-            WriteLine("Some statistics about your input:");
-            DisplayBinaryInputStatistics(firstBinaryInput, secondBinaryInput, thirdBinaryInput);
-            DisplayDecimalInputStatistics(firstDecimal, secondDecimal, thirdDecimal);
+            Console.WriteLine($"Welcome to our program!\nPlease enter 3 9-digit positive binary numbers.");
+            readInput(out firstBinaryInput, out secondBinaryInput, out thirdBinaryInput);
+            firstDecimal = convertBinaryToDecimal(firstBinaryInput);
+            secondDecimal = convertBinaryToDecimal(secondBinaryInput);
+            thirdDecimal = convertBinaryToDecimal(thirdBinaryInput);
+            displayConversionOutputSorted(firstDecimal, secondDecimal, thirdDecimal);
+            Console.WriteLine("Some statistics about your input:");
+            displayBinaryInputStatistics(firstBinaryInput, secondBinaryInput, thirdBinaryInput);
+            displayDecimalInputStatistics(firstDecimal, secondDecimal, thirdDecimal);
+            Console.WriteLine("Enter 1 to exit...");
+            Console.ReadLine();
         }
 
-        public static void ReadInput(out string o_FirstInput, out string o_SecondInput, out string o_ThirdInput)
+        private static void readInput(out string o_FirstInput, out string o_SecondInput, out string o_ThirdInput)
         {
-            Write("First number: ");
-            o_FirstInput = ReadLine();
-
-            while (isInputValid(o_FirstInput) == false)
-            {
-                HandleInvalidInput(ref o_FirstInput);
-            }
-
-            Write("Second number: ");
-            o_SecondInput = ReadLine();
-
-            while (isInputValid(o_SecondInput) == false)
-            {
-                HandleInvalidInput(ref o_SecondInput);
-            }
-
-            Write("Third number: ");
-            o_ThirdInput = ReadLine();
-
-            while (isInputValid(o_ThirdInput) == false)
-            {
-                HandleInvalidInput (ref o_ThirdInput);
-            }
+            o_FirstInput = readANumber();
+            o_SecondInput = readANumber();
+            o_ThirdInput = readANumber();
         }
 
-        public static void HandleInvalidInput(ref string io_Input)
+        private static string readANumber()
         {
-            Write($"{io_Input} is an invalid input! Please enter a 9-digit positive binary number: ");
-            io_Input = ReadLine();
+            string userInput;
+
+            do
+            {
+                Console.Write("Please enter a number: ");
+                userInput = Console.ReadLine();
+            } while (!isInputValid(userInput));
+
+            return userInput;
         }
 
-        public static void DisplayConversionOutputSorted(int i_FirstDecimal, int i_SecondDecimal, int i_ThirdDecimal)
+        private static void handleInvalidInput(ref string io_Input)
+        {
+            Console.Write($"{io_Input} is an invalid input! Please enter a 9-digit positive binary number: ");
+            io_Input = Console.ReadLine();
+        }
+
+        private static void displayConversionOutputSorted(int i_FirstDecimal, int i_SecondDecimal, int i_ThirdDecimal)
         {
             int maxOfThree = Math.Max(i_FirstDecimal, Math.Max(i_SecondDecimal, i_ThirdDecimal));
             int minOfThree = Math.Min(i_FirstDecimal, Math.Min(i_SecondDecimal, i_ThirdDecimal));
             int middleValue = i_FirstDecimal + i_SecondDecimal + i_ThirdDecimal - maxOfThree - minOfThree;
 
-            WriteLine($"You have entered the following numbers, sorted in ascending order: {minOfThree}, {middleValue}, {maxOfThree}.");
+            Console.WriteLine($"You have entered the following numbers, sorted in ascending order: " +
+                $"{minOfThree}, {middleValue}, {maxOfThree}.");
         }
 
-        public static void DisplayBinaryInputStatistics(string i_FirstBinary, string i_SecondBinary, string i_ThirdBinary)
+        private static void displayBinaryInputStatistics(string i_FirstBinary, string i_SecondBinary, string i_ThirdBinary)
         {
             StringBuilder stringBuilder = new StringBuilder();
             string formattedString;
 
             stringBuilder.Append("The average number of zeroes in your input is ");
-            formattedString = string.Format("{0} zeroes per number.\n", ((float)(NumOfZeroes(i_FirstBinary) + NumOfZeroes(i_SecondBinary) + NumOfZeroes(i_ThirdBinary)) / 3));
-            stringBuilder.Append(formattedString);
+            formattedString = string.Format("{0} zeroes per number.", ((float)(countNumOfZeroes(i_FirstBinary)
+                + countNumOfZeroes(i_SecondBinary) + countNumOfZeroes(i_ThirdBinary)) / 3));
+            stringBuilder.AppendLine(formattedString);
 
             stringBuilder.Append("The average number of ones in your input is ");
-            formattedString = string.Format("{0} ones per number.\n", ((float)(NumOfOnes(i_FirstBinary) + NumOfOnes(i_SecondBinary) + NumOfOnes(i_ThirdBinary)) / 3));
-            stringBuilder.Append(formattedString);
+            formattedString = string.Format("{0} ones per number.", ((float)(countNumOfOnes(i_FirstBinary)
+                + countNumOfOnes(i_SecondBinary) + countNumOfOnes(i_ThirdBinary)) / 3));
+            stringBuilder.AppendLine(formattedString);
 
-            Write(stringBuilder.ToString());         
+            Console.Write(stringBuilder.ToString());         
         }
 
-        public static void DisplayDecimalInputStatistics(int i_FirstDecimal, int i_SecondDecimal, int i_ThirdDecimal)
+        private static void displayDecimalInputStatistics(int i_FirstDecimal, int i_SecondDecimal, int i_ThirdDecimal)
         {
             StringBuilder stringBuilder = new StringBuilder();
             string formattedString;
 
             stringBuilder.Append("You have entered ");
-            formattedString = string.Format("{0} numbers that are power of 2, and {1} numbers that their digits are an ascending seris.\n",
-                NumOfPowerOfTwo(i_FirstDecimal, i_SecondDecimal, i_ThirdDecimal), NumOfAscendingSeries(i_FirstDecimal, i_SecondDecimal, i_ThirdDecimal));
-            stringBuilder.Append(formattedString);
+            formattedString = string.Format("{0} numbers that are power of 2, and {1} " +
+                "numbers that their digits are an ascending seris.",
+                countPowerOfTwo(i_FirstDecimal, i_SecondDecimal, i_ThirdDecimal),
+                numOfAscendingSeries(i_FirstDecimal, i_SecondDecimal, i_ThirdDecimal));
+            stringBuilder.AppendLine(formattedString);
 
-            formattedString = string.Format("The maximum of your input is: {0}\nThe minimum of your input is: {1}\n",
-                Math.Max(Math.Max(i_FirstDecimal, i_SecondDecimal), i_ThirdDecimal), Math.Min(Math.Min(i_FirstDecimal, i_SecondDecimal), i_ThirdDecimal));
-            stringBuilder.Append(formattedString);
+            formattedString = string.Format("The maximum of your input is: {0}" + Environment.NewLine +
+                "The minimum of your input is: {1}",
+                Math.Max(Math.Max(i_FirstDecimal, i_SecondDecimal), i_ThirdDecimal),
+                Math.Min(Math.Min(i_FirstDecimal, i_SecondDecimal), i_ThirdDecimal));
+            stringBuilder.AppendLine(formattedString);
 
-            Write(stringBuilder.ToString());
+            Console.Write(stringBuilder.ToString());
         }
 
         private static bool isInputValid(string i_Input)
@@ -117,7 +118,7 @@ namespace Ex01_01
             return isInputValid;
         }
 
-        public static int ConvertBinaryToDecimal(string i_Binary)
+        private static int convertBinaryToDecimal(string i_Binary)
         {
             int decimalNumber = 0;
 
@@ -132,7 +133,7 @@ namespace Ex01_01
             return decimalNumber;
         }
 
-        public static int NumOfZeroes(string i_Binary)
+        private static int countNumOfZeroes(string i_Binary)
         {
             int numOfZeroes = 0;
 
@@ -147,26 +148,26 @@ namespace Ex01_01
             return numOfZeroes;
         }
 
-        public static int NumOfOnes(string i_Binary)
+        private static int countNumOfOnes(string i_Binary)
         {
-            return 9 - NumOfZeroes(i_Binary);
+            return 9 - countNumOfZeroes(i_Binary);
         }
 
-        public static short NumOfPowerOfTwo(int i_FirstInput, int i_SecondInput, int i_ThirdInput)
+        private static short countPowerOfTwo(int i_FirstInput, int i_SecondInput, int i_ThirdInput)
         {
             short output = 0;
 
-            if (IsPowerOfTwo(i_FirstInput))
+            if (isPowerOfTwo(i_FirstInput))
             {
                 output++;
             }
 
-            if (IsPowerOfTwo(i_SecondInput))
+            if (isPowerOfTwo(i_SecondInput))
             {
                 output++;
             }
 
-            if (IsPowerOfTwo(i_ThirdInput))
+            if (isPowerOfTwo(i_ThirdInput))
             {
                 output++;
             }
@@ -174,12 +175,12 @@ namespace Ex01_01
             return output;
         }
 
-        public static bool IsPowerOfTwo(int i_Number)
+        private static bool isPowerOfTwo(int i_Number)
         {
-            return IsPowerOfTwo((float) i_Number);
+            return isPowerOfTwo((float) i_Number);
         }
 
-        public static bool IsPowerOfTwo(float i_Number)
+        private static bool isPowerOfTwo(float i_Number)
         {
             bool isPowerOfTwo;
 
@@ -195,42 +196,42 @@ namespace Ex01_01
 
             else
             {
-                isPowerOfTwo = IsPowerOfTwo(i_Number / 2f);
+                isPowerOfTwo = Program.isPowerOfTwo(i_Number / 2f);
             }
 
             return isPowerOfTwo;
         }
 
-        public static short NumOfAscendingSeries(int i_FirstInput, int i_SecondInput, int i_ThirdInput)
+        private static short numOfAscendingSeries(int i_FirstInput, int i_SecondInput, int i_ThirdInput)
         {
             short output = 0;
 
-            if (IsAnAscendingSeries(i_FirstInput))
+            if (isAnAscendingSeries(i_FirstInput))
             {
                 output++;
             }
 
-            if (IsAnAscendingSeries(i_SecondInput))
+            if (isAnAscendingSeries(i_SecondInput))
             {
                 output++;
             }
 
-            if (IsAnAscendingSeries(i_ThirdInput))
+            if (isAnAscendingSeries(i_ThirdInput))
             {
                 output++;
             }
 
             return output;
-
         }
 
-        public static bool IsAnAscendingSeries(int i_Number)
+        private static bool isAnAscendingSeries(int i_Number)
         {
             bool isAscending = true;
             int currentDigit = i_Number % 10, previousDigit;
+
             i_Number /= 10;
 
-            while (i_Number > 0 && isAscending == true)
+            while (i_Number > 0 && isAscending)
             {
                 previousDigit = currentDigit;
                 currentDigit = i_Number % 10;

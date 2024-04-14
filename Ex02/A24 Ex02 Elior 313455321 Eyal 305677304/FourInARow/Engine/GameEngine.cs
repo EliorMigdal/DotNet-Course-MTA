@@ -9,21 +9,20 @@ namespace FourInARow.Engine
 {
     public class GameEngine
     {
-        public GameBoard GameBoard { get; set; }
+        public GameBoard GameBoard { get; set; } = new GameBoard();
         public List<GameParticipant> GameParticipants { get; set; }
-        public RoundResult RoundResult { get; set; }
+        public RoundResult RoundResult { get; set; } = new RoundResult();
         private readonly BoardInspector r_BoardInspector = new BoardInspector();
         private GameParticipant m_CurrentPlayer = null;
 
         public void InitializeEngine(GameInfo i_GameInfo)
         {
-            GameBoard = new GameBoard(i_GameInfo.Height, i_GameInfo.Width);
-            RoundResult = new RoundResult();
+            GameBoard.InitializeBoard(i_GameInfo.Height, i_GameInfo.Width);
 
             GameParticipants = new List<GameParticipant>
-        {
-            new GameParticipant("P1", false, 'O')
-        };
+            {
+                new GameParticipant("P1", false, 'O')
+            };
 
             if (i_GameInfo.PlayTheAI)
             {
@@ -54,17 +53,12 @@ namespace FourInARow.Engine
                 handleDraw();
             }
 
-            else if (!hasGameJustStarted())
+            else
             {
                 updateTurn();
             }
 
-            return isThereAWinner || isThereADraw || !RoundResult.RoundWinner.Equals(string.Empty);
-        }
-
-        private bool hasGameJustStarted()
-        {
-            return GameBoard.GetSymbol(GameBoard.LatestPointInserted).Equals(' ');
+            return isThereAWinner || isThereADraw || hasPlayerForfieted();
         }
 
         public string GetNextPlayersName()
@@ -79,9 +73,15 @@ namespace FourInARow.Engine
 
         public bool ValidateMoveLogic(int i_ColumnNum)
         {
-            bool isValid = i_ColumnNum >= 0 && i_ColumnNum <= GameBoard.GetBoardWidth() - 1;
+            bool isValid = true;
 
-            return isValid && GameBoard.IsThereAFreeSpaceInColumn(i_ColumnNum);
+            if (!hasPlayerForfieted())
+            {
+                isValid = i_ColumnNum - 1 >= 0 && i_ColumnNum - 1 <= GameBoard.GetBoardWidth() - 1 &&
+                    GameBoard.IsThereAFreeSpaceInColumn(i_ColumnNum - 1);
+            }
+
+            return isValid;
         }
 
         public void ForfietPlayer()
@@ -92,16 +92,19 @@ namespace FourInARow.Engine
 
         public void ResetEngineData()
         {
-            GameBoard.InitializeBoard();
+            GameBoard.EmptyAllCells();
             m_CurrentPlayer = GameParticipants[0];
             RoundResult.RoundWinner = string.Empty;
         }
 
         public void InsertCoin(int i_Column)
         {
-            char coinSymbol = m_CurrentPlayer.Symbol;
+            if (!hasPlayerForfieted())
+            {
+                char coinSymbol = m_CurrentPlayer.Symbol;
 
-            GameBoard.InsertToAColumn(i_Column, coinSymbol);
+                GameBoard.InsertToAColumn(i_Column, coinSymbol);
+            }
         }
 
         private void updateTurn()
@@ -113,12 +116,12 @@ namespace FourInARow.Engine
 
         public void MakeAIMove()
         {
-            int column = new Random().Next(0, GameBoard.GetBoardWidth());
+            int column;
 
-            while (!GameBoard.IsThereAFreeSpaceInColumn(column))
+            do
             {
                 column = new Random().Next(0, GameBoard.GetBoardWidth());
-            }
+            } while (!GameBoard.IsThereAFreeSpaceInColumn(column));
 
             InsertCoin(column);
         }
@@ -134,6 +137,21 @@ namespace FourInARow.Engine
         {
             RoundResult.RoundWinner = string.Empty;
             RoundResult.RoundOutcome = eRoundOutcome.Draw;
+        }
+
+        public bool ValidateBoardSize(int i_Width, int i_Height)
+        {
+            return GameBoard.IsSizeValid(i_Width, i_Height);
+        }
+
+        public void GetBoardDimensions(out int o_MinDimension, out int o_MaxDimension)
+        {
+            GameBoard.GetDimensions(out o_MinDimension, out o_MaxDimension);
+        }
+
+        private bool hasPlayerForfieted()
+        {
+            return !RoundResult.RoundWinner.Equals(string.Empty);
         }
     }
 }

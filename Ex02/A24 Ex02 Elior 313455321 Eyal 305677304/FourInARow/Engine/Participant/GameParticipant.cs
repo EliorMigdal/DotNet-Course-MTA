@@ -14,10 +14,5 @@
             Score = 0;
             Symbol = symbol;
         }
-
-        public void AddPoint()
-        {
-            Score++;
-        }
     }
 }

@@ -1,42 +1,82 @@
+using System;
 using System.Text;
-using static System.Console;
 
 namespace Ex01_04
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static void Main()
         {
-            RunProgram(args[0]);
+            string userInput = readInput();
+            runProgram(userInput);
         }
 
-        public static void RunProgram(string i_String)
+        private static string readInput()
         {
-            StringBuilder stringBuilder = ExamineString(i_String);
-            Write(stringBuilder.ToString());
+            string userInput;
+
+            do
+            {
+                Console.Write("Please enter an input of digits or letters, " +
+                    "no longer than 8 characters: ");
+                userInput = Console.ReadLine();
+            } while (!isInputValid(userInput));
+
+            return userInput;
         }
 
-        public static StringBuilder ExamineString(string i_String)
+        private static bool isInputValid(string i_Input)
+        {
+            bool hasDigit = false, hasLetter = false;
+
+            foreach (char c in i_Input)
+            {
+                if (char.IsLetter(c))
+                {
+                    hasLetter = true;
+                }
+
+                else if (char.IsDigit(c))
+                {
+                    hasLetter = true;
+                }
+            }
+
+            return i_Input.Length >= 0 && i_Input.Length <= 8 && (hasDigit ^ hasLetter);
+        }
+
+        private static void runProgram(string i_String)
+        {
+            StringBuilder stringBuilder = examineString(i_String);
+            Console.Write(stringBuilder.ToString());
+            Console.WriteLine("Enter 1 to exit...");
+            Console.ReadLine();
+        }
+
+        private static StringBuilder examineString(string i_String)
         {
             StringBuilder stringBuilder = new StringBuilder();
 
-            stringBuilder.Append(string.Format("Some data about {0}:\n", i_String));
-            stringBuilder.Append(string.Format("{0} is{1} a palindrome.\n", i_String, IsPalindrome(i_String) ? "" : " not"));
+            stringBuilder.AppendLine(string.Format("Some data about {0}: ", i_String));
+            stringBuilder.AppendLine(string.Format("{0} is{1} a palindrome.", i_String,
+                isPalindrome(i_String) ? string.Empty : " not"));
 
-            if (IsANumber(i_String, out int parsedNumber) == true)
+            if (isANumber(i_String, out int parsedNumber))
             {
-                stringBuilder.Append(string.Format("{0} does{1} divide by 5.\n", i_String, parsedNumber % 5 == 0 ? "" : " not"));
+                stringBuilder.AppendLine(string.Format("{0} does{1} divide by 5.",
+                    i_String, parsedNumber % 5 == 0 ? "" : " not"));
             }
 
             else
             {
-                stringBuilder.Append(string.Format("{0} has {1} lowercase letters.\n", i_String, CountLowerCase(i_String)));
+                stringBuilder.AppendLine(string.Format("{0} has {1} lowercase letters.",
+                    i_String, countLowerCase(i_String)));
             }
 
             return stringBuilder;
         }
 
-        public static bool IsPalindrome(string i_String)
+        private static bool isPalindrome(string i_String)
         {
             bool isPalindrome;
 
@@ -48,18 +88,18 @@ namespace Ex01_04
             else
             {
                 isPalindrome = i_String[0] == i_String[i_String.Length - 1]
-                    && IsPalindrome(i_String.Substring(1, i_String.Length - 2));
+                    && Program.isPalindrome(i_String.Substring(1, i_String.Length - 2));
             }
 
             return isPalindrome;
         }
 
-        public static bool IsANumber(string i_String, out int o_ParsedNumber)
+        private static bool isANumber(string i_String, out int o_ParsedNumber)
         {
             return int.TryParse(i_String, out o_ParsedNumber);
         }
 
-        public static int CountLowerCase(string i_String)
+        private static int countLowerCase(string i_String)
         {
             int output = 0;
 

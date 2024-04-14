@@ -1,19 +1,17 @@
 ﻿using System;
-using static Ex02.ConsoleUtils.Screen;
-using FourInARow.UI.Reader;
-using FourInARow.UI.Validator;
+/* using static Ex02.ConsoleUtils.Screen; //External DLL supplied in the assignment. */
 using FourInARow.UI.Printer;
 using FourInARow.Engine;
 using FourInARow.DTO;
+using FourInARow.UI.Enums;
 
 namespace FourInARow.UI
 {
     public class GameUI
     {
-        private readonly InputReader r_InputReader = new InputReader();
-        private readonly InputValidator r_InputValidator = new InputValidator();
         private readonly OutputPrinter r_OutputPrinter = new OutputPrinter();
         private readonly GameEngine r_GameEngine = new GameEngine();
+        private readonly GameInfo m_GameInfo = new GameInfo();
 
         public void StartGame()
         {
@@ -25,48 +23,125 @@ namespace FourInARow.UI
         private void initializeGame()
         {
             r_OutputPrinter.PrintMessage("Welcome to our 4-in-a-row game!");
-            GameInfo gameInfo = readGameInfo();
-            r_GameEngine.InitializeEngine(gameInfo);
+            readGameInfo();
+            r_GameEngine.InitializeEngine(m_GameInfo);
         }
 
-        private GameInfo readGameInfo()
+        private void readGameInfo()
         {
-            GameInfo gameInfo = new GameInfo();
+            handleBoardSizeInput();
+            handleSecondParticipantInput();
+        }
 
-            r_InputReader.ReadBoardSize(out string width, out string height);
+        private void handleBoardSizeInput()
+        {
+            string boardWidthInput, boardHeightInput;
 
-            while (!r_InputValidator.ValidateBoardSize(width, height, ref gameInfo))
+            do
             {
-                r_OutputPrinter.PrintError("Invalid board size!");
-                r_InputReader.ReadBoardSize(out width, out height);
+                readBoardSize(out boardWidthInput, out boardHeightInput);
+            } while (!validateBoardSize(boardWidthInput, boardHeightInput));
+        }
+
+        private void readBoardSize(out string o_BoardWidthInput, out string o_BoardHeightInput)
+        {
+            r_GameEngine.GetBoardDimensions(out int minDimension, out int maxDimension);
+            Console.WriteLine("Please enter your desired board's size.");
+            Console.WriteLine($"Board size is ranged from {minDimension}x{minDimension} " +
+                $"to {maxDimension}x{maxDimension}.");
+            Console.Write("Please enter board width: ");
+            o_BoardWidthInput = Console.ReadLine();
+            Console.Write("Please enter board height: ");
+            o_BoardHeightInput = Console.ReadLine();
+        }
+
+        private bool validateBoardSize(string i_BoardWidthInput, string i_BoardHeightInput)
+        {
+            return validateBoardSizeInput(i_BoardWidthInput, i_BoardHeightInput)
+                && validateBoardSizeLogic(m_GameInfo.Width, m_GameInfo.Height);
+        }
+
+        private bool validateBoardSizeInput(string i_BoardWidthInput, string i_BoardHeightInput)
+        {
+            bool isWidthValid = tryParsingToInt(i_BoardWidthInput, out int width);
+            bool isHeightValid = tryParsingToInt(i_BoardHeightInput, out int height);
+
+            m_GameInfo.Width = width;
+            m_GameInfo.Height = height;
+
+            return isWidthValid && isHeightValid;
+        }
+
+        private bool validateBoardSizeLogic(int i_BoardWidth, int i_BoardHeight)
+        {
+            bool isSizeInRange = r_GameEngine.ValidateBoardSize(i_BoardWidth, i_BoardHeight);
+
+            if (!isSizeInRange)
+            {
+                Console.WriteLine($"Error: {i_BoardWidth}x{i_BoardHeight} is out of board's dimensions range!");
             }
 
-            r_InputReader.ReadParticipantsChoice(out string participantsChoice);
+            return isSizeInRange;
+        }
 
-            while (!r_InputValidator.ValidateParticipantsChoice(participantsChoice, ref gameInfo))
+        private bool tryParsingToInt(string i_Input, out int o_Value)
+        {
+            bool isParsable = int.TryParse(i_Input, out o_Value);
+
+            if (!isParsable)
             {
-                r_OutputPrinter.PrintError("Invalid participants choice!");
-                r_InputReader.ReadParticipantsChoice(out participantsChoice);
+                Console.WriteLine($"Error: {i_Input} cannot be parsed as an integer!");
             }
 
-            return gameInfo;
+            return isParsable;
+        }
+
+        private void handleSecondParticipantInput()
+        {
+            string secondParticipantInput;
+
+            do
+            {
+                readSecondParticipantInput(out secondParticipantInput);
+            } while (!validateParticipantChoice(secondParticipantInput));
+        }
+
+        private void readSecondParticipantInput(out string o_Input)
+        {
+            Console.WriteLine($"Please enter {(int)eUserChoice.PlayAI} to play against the AI, " +
+            $"or {(int)eUserChoice.PlayAnotherPlayer} to play agains another player.");
+            Console.Write("Enter your choice: ");
+            o_Input = Console.ReadLine();
+        }
+
+        private bool validateParticipantChoice(string i_Input)
+        {
+            bool isParsable = Enum.TryParse(i_Input, true, out eUserChoice userChoice);
+
+            if (isParsable)
+            {
+                m_GameInfo.PlayTheAI = userChoice.Equals(eUserChoice.PlayAI);
+            }
+
+            else
+            {
+                Console.WriteLine($"Error: {i_Input} isn't a valid choice!");
+            }
+
+            return isParsable;
         }
 
         private void runGame()
         {
-            bool playAnotherRound = true;
+            bool playAnotherRound;
 
-            while (playAnotherRound)
+            do
             {
+                resetGame();
                 playRound();
                 finishRound();
                 playAnotherRound = playAgainChoice();
-
-                if (playAnotherRound)
-                {
-                    resetGame();
-                }
-            }
+            } while (playAnotherRound);
 
             r_OutputPrinter.PrintMessage("Farewell!");
         }
@@ -75,7 +150,7 @@ namespace FourInARow.UI
         {
             r_OutputPrinter.PrintMessage("Round is starting!");
 
-            while (!r_GameEngine.HasGameConcluded())
+            do
             {
                 if (r_GameEngine.IsItAITurn())
                 {
@@ -84,13 +159,12 @@ namespace FourInARow.UI
 
                 else
                 {
-                    r_OutputPrinter.PrintBoard(r_GameEngine.GameBoard);
-                    r_OutputPrinter.PrintMessage($"Now it is {r_GameEngine.GetNextPlayersName()}'s turn!");
                     handlePlayerMove();
                 }
 
-                Clear();
-            }
+                Console.Clear();
+
+            } while (!r_GameEngine.HasGameConcluded());
 
             r_OutputPrinter.PrintBoard(r_GameEngine.GameBoard);
         }
@@ -98,36 +172,50 @@ namespace FourInARow.UI
         private void handlePlayerMove()
         {
             int columnNum;
+            string playerMove;
 
-            r_InputReader.ReadMoveChoice(out string playerMove);
+            r_OutputPrinter.PrintBoard(r_GameEngine.GameBoard);
+            r_OutputPrinter.PrintMessage($"Now it is {r_GameEngine.GetNextPlayersName()}'s turn!");
 
-            while (!isMoveValid(playerMove, out columnNum))
+            do
             {
-                r_OutputPrinter.PrintError("Invalid column choice!\nColumn is full or out of range.");
-                r_InputReader.ReadMoveChoice(out playerMove);
-            }
+                readPlayerMove(out playerMove);
+            } while (!isMoveValid(playerMove, out columnNum));
 
-            if (playerMove.Equals("Q"))
-            {
-                r_GameEngine.ForfietPlayer();
-            }
+            r_GameEngine.InsertCoin(columnNum - 1);
+        }
 
-            else
-            {
-                r_GameEngine.InsertCoin(columnNum - 1);
-            }
+        private void readPlayerMove(out string o_PlayerMove)
+        {
+            Console.WriteLine("Please enter a column number to insert your shape," + Environment.NewLine +
+            "or enter 'Q' if you would like to forfeit (Your opponent will get 1 point): ");
+            o_PlayerMove = Console.ReadLine();
         }
 
         private bool isMoveValid(string i_PlayerMove, out int o_Column)
         {
-            bool isMoveValid = r_InputValidator.ValidateMoveInput(i_PlayerMove, out o_Column);
+            bool isParsable = validateMoveInput(i_PlayerMove, out o_Column);
+            bool isValidLogically = r_GameEngine.ValidateMoveLogic(o_Column);
 
-            if (!i_PlayerMove.Equals("Q"))
+            if (isParsable && !isValidLogically)
             {
-                isMoveValid &= r_GameEngine.ValidateMoveLogic(o_Column - 1);
+                Console.WriteLine($"Error: {i_PlayerMove} is out of board's range!");
             }
 
-            return isMoveValid;
+            return isParsable && isValidLogically;
+        }
+
+        private bool validateMoveInput(string i_PlayerMove, out int o_Column)
+        {
+            bool isQuitting = false;
+
+            if (i_PlayerMove.Equals("Q"))
+            {
+                isQuitting = true;
+                r_GameEngine.ForfietPlayer();
+            }
+
+            return tryParsingToInt(i_PlayerMove, out o_Column) || isQuitting;
         }
 
         private void handleAIMove()
@@ -143,23 +231,41 @@ namespace FourInARow.UI
 
         private bool playAgainChoice()
         {
+            string roundInput;
             bool playAgain;
 
-            r_InputReader.ReadRoundChoice(out string choice);
-
-            while (!r_InputValidator.ValidateRoundInput(choice, out playAgain))
+            do
             {
-                r_OutputPrinter.PrintError("Invalid choice!");
-                r_InputReader.ReadRoundChoice(out choice);
-            }
+                readRoundChoice(out roundInput);
+            } while (!validateRoundChoice(roundInput, out playAgain));
 
             return playAgain;
+        }
+
+        private void readRoundChoice(out string o_RoundChoice)
+        {
+            Console.Write("Would like to play another round? Enter Y/N: ");
+            o_RoundChoice = Console.ReadLine();
+        }
+
+        private bool validateRoundChoice(string i_RoundChoice, out bool o_ParsedChoice)
+        {
+            bool isInputValid = i_RoundChoice.Equals("Y") || i_RoundChoice.Equals("N");
+
+            if (!isInputValid)
+            {
+                Console.WriteLine($"Error: {i_RoundChoice} cannot be parsed as a boolean (True/False)!");
+            }
+
+            o_ParsedChoice = i_RoundChoice.Equals("Y");
+
+            return isInputValid;
         }
 
         private void resetGame()
         {
             r_GameEngine.ResetEngineData();
-            Clear();
+            Console.Clear();
         }
 
         private void exitGame()

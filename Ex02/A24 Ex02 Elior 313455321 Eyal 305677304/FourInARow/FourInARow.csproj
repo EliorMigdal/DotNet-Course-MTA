@@ -61,12 +61,9 @@
     <Compile Include="Engine\GameEngine.cs" />
     <Compile Include="Engine\Participant\GameParticipant.cs" />
     <Compile Include="UI\Printer\OutputPrinter.cs" />
-    <Compile Include="UI\Enums\eDimensions.cs" />
     <Compile Include="UI\Enums\eUserChoice.cs" />
     <Compile Include="DTO\GameInfo.cs" />
     <Compile Include="UI\GameUI.cs" />
-    <Compile Include="UI\Reader\InputReader.cs" />
-    <Compile Include="UI\Validator\InputValidator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Engine\Inspector\BoardInspector.cs" />
     <Compile Include="Engine\Board\Point.cs" />

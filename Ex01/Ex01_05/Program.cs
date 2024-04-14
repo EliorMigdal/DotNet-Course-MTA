@@ -1,5 +1,5 @@
+using System;
 using System.Text;
-using static System.Console;
 
 namespace Ex01_05
 {
@@ -7,29 +7,31 @@ namespace Ex01_05
     {
         public static void Main()
         {
-            RunProgram();
+            runProgram();
         }
 
-        public static void RunProgram()
+        private static void runProgram()
         {
-            Write("Hi there! Please enter a 9-digit number: ");
-            ReadInput(out string userInput);
-            DisplayStatistics(userInput);
+            Console.Write("Hi there! Please enter a 9-digit number: ");
+            readInput(out string userInput);
+            displayStatistics(userInput);
+            Console.WriteLine("Enter 1 to exit...");
+            Console.ReadLine();
         }
 
-        public static void ReadInput(out string o_UserInput)
+        private static void readInput(out string o_UserInput)
         {
-            string input = ReadLine();
+            string input = Console.ReadLine();
 
-            while (IsInputValid(input) == false)
+            while (isInputValid(input) == false)
             {
-                HandleInvalidInput(ref input);
+                handleInvalidInput(ref input);
             }
 
             o_UserInput = input;
-        } 
+        }
 
-        public static bool IsInputValid(string i_Input)
+        private static bool isInputValid(string i_Input)
         {
             bool isInputValid = i_Input.Length == 9;
 
@@ -44,27 +46,32 @@ namespace Ex01_05
             return isInputValid;
         }
 
-        public static void HandleInvalidInput(ref string io_Input)
+        private static void handleInvalidInput(ref string io_Input)
         {
-            Write($"{io_Input} is an invalid input! Please enter a 9-digit positive number: ");
-            io_Input = ReadLine();
+            Console.Write($"{io_Input} is an invalid input! Please enter a 9-digit positive number: ");
+            io_Input = Console.ReadLine();
         }
 
-        public static void DisplayStatistics(string i_Input)
+        private static void displayStatistics(string i_Input)
         {
             StringBuilder stringBuilder = new StringBuilder();
 
-            stringBuilder.AppendLine(string.Format("\nSome statistics regarding the number {0}:", i_Input));
-            stringBuilder.AppendLine(string.Format("1. The largest digit in {0} is {1}", i_Input, ExtractMaxDigit(i_Input)));
-            stringBuilder.AppendLine(string.Format("2. The smallest digit in {0} is {1}", i_Input, ExtractMinDigit(i_Input)));
-            stringBuilder.AppendLine(string.Format("3. The number of digits in {0} that divide by 4 is {1}", i_Input, CountDividingByFour(i_Input)));
-            stringBuilder.AppendLine(string.Format("4. The number of digits in {0} that are bigger than its unity digit, {1}, is {2}", i_Input, i_Input[i_Input.Length - 1], CountNumOfGreaterThanUnityDigit(i_Input)));
-            stringBuilder.AppendLine(string.Format("5. The average of {0}'s digits is {1}", i_Input, CalculateDigitsAverage(i_Input)));
+            stringBuilder.AppendLine(string.Format(Environment.NewLine + "Some statistics regarding the number {0}:", i_Input));
+            stringBuilder.AppendLine(string.Format("1. The largest digit in {0} is {1}",
+                i_Input, extractMaxDigit(i_Input)));
+            stringBuilder.AppendLine(string.Format("2. The smallest digit in {0} is {1}",
+                i_Input, extractMinDigit(i_Input)));
+            stringBuilder.AppendLine(string.Format("3. The number of digits in {0} that divide by 4 is {1}",
+                i_Input, countDividingByFour(i_Input)));
+            stringBuilder.AppendLine(string.Format("4. The number of digits in {0} that " +
+                "are bigger than its unity digit, {1}, is {2}", i_Input, i_Input[i_Input.Length - 1], countNumOfGreaterThanUnityDigit(i_Input)));
+            stringBuilder.AppendLine(string.Format("5. The average of {0}'s digits is {1}", i_Input,
+                calculateDigitsAverage(i_Input)));
 
-            Write(stringBuilder.ToString());
+            Console.Write(stringBuilder.ToString());
         }
 
-        public static int ExtractMaxDigit(string i_Number)
+        private static int extractMaxDigit(string i_Number)
         {
             int maxDigit = int.MinValue;
 
@@ -79,7 +86,7 @@ namespace Ex01_05
             return maxDigit;
         }
 
-        public static int ExtractMinDigit(string i_Number)
+        private static int extractMinDigit(string i_Number)
         {
             int minDigit = int.MaxValue;
 
@@ -94,7 +101,7 @@ namespace Ex01_05
             return minDigit;
         }
 
-        public static int CountDividingByFour(string i_Number)
+        private static int countDividingByFour(string i_Number)
         {
             int output = 0;
 
@@ -109,7 +116,7 @@ namespace Ex01_05
             return output;
         }
 
-        public static int CountNumOfGreaterThanUnityDigit(string i_Number)
+        private static int countNumOfGreaterThanUnityDigit(string i_Number)
         {
             int output = 0, unityDigit = int.Parse(i_Number[i_Number.Length - 1].ToString());
 
@@ -124,12 +131,12 @@ namespace Ex01_05
             return output;
         }
 
-        public static float CalculateDigitsAverage(string i_Number)
+        private static float calculateDigitsAverage(string i_Number)
         {
-            return (float)((float)SumDigits(i_Number) / (float)i_Number.Length);
+            return (float)(sumDigits(i_Number) / (float)i_Number.Length);
         }
 
-        public static int SumDigits(string i_Number)
+        private static int sumDigits(string i_Number)
         {
             int output = 0;
 

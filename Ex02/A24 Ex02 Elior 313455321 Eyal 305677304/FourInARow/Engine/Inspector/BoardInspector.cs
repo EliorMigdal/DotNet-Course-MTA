@@ -30,18 +30,14 @@ namespace FourInARow.Engine.Inspector
             return anySequenceOfFour;
         }
 
-        private bool areThereFourInARow(GameBoard i_GameBoard, int i_Row, char i_Symbol)
+        private int maxSequenceInDirection(GameBoard i_GameBoard, int i_Row, int i_Column, char i_Symbol,
+            int i_RowIncrement, int i_ColumnIncrement)
         {
-            return maxSequenceInARow(i_GameBoard, i_Row, i_Symbol) == 4;
-        }
+            int currentStreak = 0, maxStreak = 0, currentRow = i_Row, currentColumn = i_Column;
 
-        private int maxSequenceInARow(GameBoard i_GameBoard, int i_Row, char i_Symbol)
-        {
-            int currentStreak = 0, maxStreak = 0;
-
-            for (int i = 0; i < i_GameBoard.GetBoardWidth(); i++)
+            while (i_GameBoard.IsInBounds(currentRow, currentColumn))
             {
-                if (i_Symbol.Equals(i_GameBoard.GetSymbol(i_Row, i)))
+                if (i_Symbol.Equals(i_GameBoard.GetSymbol(currentRow, currentColumn)))
                 {
                     currentStreak++;
                 }
@@ -51,90 +47,33 @@ namespace FourInARow.Engine.Inspector
                     maxStreak = Math.Max(currentStreak, maxStreak);
                     currentStreak = 0;
                 }
+
+                currentRow += i_RowIncrement;
+                currentColumn += i_ColumnIncrement;
             }
 
             return Math.Max(currentStreak, maxStreak);
+        }
+
+        private bool areThereFourInARow(GameBoard i_GameBoard, int i_Row, char i_Symbol)
+        {
+            return maxSequenceInDirection(i_GameBoard, i_Row, 0, i_Symbol, 0, 1) == 4;
         }
 
         private bool areThereFourInAColumn(GameBoard i_GameBoard, int i_Column, char i_Symbol)
         {
-            return maxSequenceInAColumn(i_GameBoard, i_Column, i_Symbol) == 4;
+            return maxSequenceInDirection(i_GameBoard, 0, i_Column, i_Symbol, 1, 0) == 4;
         }
 
-        private int maxSequenceInAColumn(GameBoard i_GameBoard, int i_Column, char i_Symbol)
+        private bool areThereFourInDiagonal(GameBoard i_GameBoard, char i_Symbol)
         {
-            int currentStreak = 0, maxStreak = 0;
+            Point startOfLeftDiagonal = i_GameBoard.GetTopLeftPointInDiagonal(i_GameBoard.LatestPointInserted);
+            Point startOfRightDiagonal = i_GameBoard.GetTopRightPointInDiagonal(i_GameBoard.LatestPointInserted);
 
-            for (int i = 0; i < i_GameBoard.GetBoardHeight(); i++)
-            {
-                if (i_Symbol.Equals(i_GameBoard.GetSymbol(i, i_Column)))
-                {
-                    currentStreak++;
-                }
-
-                else
-                {
-                    maxStreak = Math.Max(currentStreak, maxStreak);
-                    currentStreak = 0;
-                }
-            }
-
-            return Math.Max(currentStreak, maxStreak);
-        }
-
-        public bool areThereFourInDiagonal(GameBoard i_GameBoard, char i_Symbol)
-        {
-            return maxSequenceInLeftDiagonal(i_GameBoard, i_Symbol) == 4 ||
-                maxSequenceInRightDiagonal(i_GameBoard, i_Symbol) == 4;
-        }
-
-        private int maxSequenceInLeftDiagonal(GameBoard i_GameBoard, char i_Symbol)
-        {
-            Point diagonalPoint = i_GameBoard.GetTopLeftPointInDiagonal(i_GameBoard.LatestPointInserted);
-            int currentSequence = 0, maxSequence = 0;
-
-            while (i_GameBoard.IsInBounds(diagonalPoint))
-            {
-                if (i_Symbol.Equals(i_GameBoard.GetSymbol(diagonalPoint)))
-                {
-                    currentSequence++;
-                }
-
-                else
-                {
-                    maxSequence = Math.Max(currentSequence, maxSequence);
-                    currentSequence = 0;
-                }
-
-                diagonalPoint++;
-            }
-
-            return Math.Max(currentSequence, maxSequence);
-        }
-
-        private int maxSequenceInRightDiagonal(GameBoard i_GameBoard, char i_Symbol)
-        {
-            Point diagonalPoint = i_GameBoard.GetTopRightPointInDiagonal(i_GameBoard.LatestPointInserted);
-            int currentSequence = 0, maxSequence = 0;
-
-            while (i_GameBoard.IsInBounds(diagonalPoint))
-            {
-                if (i_Symbol.Equals(i_GameBoard.GetSymbol(diagonalPoint)))
-                {
-                    currentSequence++;
-                }
-
-                else
-                {
-                    maxSequence = Math.Max(currentSequence, maxSequence);
-                    currentSequence = 0;
-                }
-
-                diagonalPoint.Column--;
-                diagonalPoint.Row++;
-            }
-
-            return Math.Max(currentSequence, maxSequence);
+            return maxSequenceInDirection(i_GameBoard, startOfLeftDiagonal.Row,
+                   startOfLeftDiagonal.Column, i_Symbol, 1, 1) == 4 ||
+                   maxSequenceInDirection(i_GameBoard, startOfRightDiagonal.Row,
+                   startOfRightDiagonal.Column, i_Symbol, 1, -1) == 4;
         }
 
         public bool IsThereADraw(GameBoard i_GameBoard)

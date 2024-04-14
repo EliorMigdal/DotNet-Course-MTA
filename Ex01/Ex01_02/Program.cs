@@ -1,4 +1,4 @@
-using static System.Console;
+using System;
 
 namespace Ex01_02
 {
@@ -9,37 +9,39 @@ namespace Ex01_02
             const int k_Height = 9;
 
             PrintDiamond(k_Height);
+            Console.WriteLine("Enter 1 to exit...");
+            Console.ReadLine();
         }
 
         public static void PrintDiamond(int i_Height)
         {
-            PrintTriangleOfStars(i_Height, i_Height);
-            PrintTriangleUpSideDown(i_Height - 2, i_Height);
+            printTriangleOfStars(i_Height, i_Height);
+            printTriangleUpSideDown(i_Height - 2, i_Height);
         }
 
-        public static void PrintTriangleOfStars(int i_Height, int i_OriginalHeight)
+        private static void printTriangleOfStars(int i_Height, int i_OriginalHeight)
         {
             if (i_Height >= 1)
             {
-                PrintTriangleOfStars(i_Height - 2, i_OriginalHeight);
-                PrintRowOfStars(i_Height, i_OriginalHeight);
+                printTriangleOfStars(i_Height - 2, i_OriginalHeight);
+                printRowOfStars(i_Height, i_OriginalHeight);
             }
         }
 
-        public static void PrintTriangleUpSideDown(int i_Height, int i_OriginalHeight)
+        private static void printTriangleUpSideDown(int i_Height, int i_OriginalHeight)
         {
             if (i_Height >= 1)
             {
-                PrintRowOfStars(i_Height, i_OriginalHeight);
-                PrintTriangleUpSideDown(i_Height - 2, i_OriginalHeight);
+                printRowOfStars(i_Height, i_OriginalHeight);
+                printTriangleUpSideDown(i_Height - 2, i_OriginalHeight);
             }
         }
 
-        public static void PrintRowOfStars(int i_CurrentRowLen, int i_LongestRowLen)
+        private static void printRowOfStars(int i_CurrentRowLen, int i_LongestRowLen)
         {
             int spaces = (i_LongestRowLen - i_CurrentRowLen) / 2;
 
-            WriteLine(new string('*', i_CurrentRowLen).PadLeft(i_CurrentRowLen + spaces));
+            Console.WriteLine(new string('*', i_CurrentRowLen).PadLeft(i_CurrentRowLen + spaces));
         }
     }
 }

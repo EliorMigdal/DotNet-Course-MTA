@@ -3,16 +3,17 @@
     public class GameBoard
     {
         public char[,] Board { get; set; }
-        public Point LatestPointInserted { get; set; }
+        public Point LatestPointInserted { get; set; } = new Point();
+        private const int k_MinDimension = 4;
+        private const int k_MaxDimension = 8;
 
-        public GameBoard(int i_Height, int i_Width)
+        public void InitializeBoard(int i_Height, int i_Width)
         {
             Board = new char[i_Height, i_Width];
-            InitializeBoard();
-            LatestPointInserted = new Point();
+            EmptyAllCells();
         }
 
-        public void InitializeBoard()
+        public void EmptyAllCells()
         {
             for (int i = 0; i < GetBoardHeight(); i++)
             {
@@ -42,9 +43,9 @@
         {
             int firstVacancy = getLastFreeSpaceInColumn(i_Column);
 
+            Board[firstVacancy, i_Column] = i_Shape;
             LatestPointInserted.Row = firstVacancy;
             LatestPointInserted.Column = i_Column;
-            Board[firstVacancy, i_Column] = i_Shape;
         }
 
         public char GetSymbol(int i_Row, int i_Column)
@@ -77,30 +78,27 @@
             return lastVacancy;
         }
 
-        public Point GetTopLeftPointInDiagonal(Point i_Point)
+        public Point GetTopLeftPointInDiagonal(Point i_startingPoint)
         {
-            int startPointRow = i_Point.Row, startPointColumn = i_Point.Column;
-
-            while (IsInBounds(startPointRow, startPointColumn))
-            {
-                startPointRow--;
-                startPointColumn--;
-            }
-
-            return new Point(startPointRow + 1, startPointColumn + 1);
+            return getTopDiagonalPoint(i_startingPoint, -1);
         }
 
-        public Point GetTopRightPointInDiagonal(Point i_Point)
+        public Point GetTopRightPointInDiagonal(Point i_startingPoint)
         {
-            int startPointRow = i_Point.Row, startPointColumn = i_Point.Column;
+            return getTopDiagonalPoint(i_startingPoint, 1);
+        }
+
+        private Point getTopDiagonalPoint(Point i_startingPoint, int i_Direction)
+        {
+            int startPointRow = i_startingPoint.Row, startPointColumn = i_startingPoint.Column;
 
             while (IsInBounds(startPointRow, startPointColumn))
             {
-                startPointRow--;
-                startPointColumn++;
+                --startPointRow;
+                startPointColumn += i_Direction;
             }
 
-            return new Point(startPointRow + 1, startPointColumn - 1);
+            return new Point(startPointRow + 1, startPointColumn - i_Direction);
         }
 
         public bool IsInBounds(int i_Row, int i_Column)
@@ -112,6 +110,18 @@
         public bool IsInBounds(Point i_Point)
         {
             return IsInBounds(i_Point.Row, i_Point.Column);
+        }
+
+        public bool IsSizeValid(int i_Width, int i_Height)
+        {
+            return i_Width >= k_MinDimension && i_Width <= k_MaxDimension &&
+                i_Height >= k_MinDimension && i_Height <= k_MaxDimension;
+        }
+
+        public void GetDimensions(out int o_MinDimension, out int o_MaxDimension)
+        {
+            o_MinDimension = k_MinDimension;
+            o_MaxDimension = k_MaxDimension;
         }
     }
 }
